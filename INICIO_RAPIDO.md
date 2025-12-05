@@ -31,25 +31,34 @@ Invoke-RestMethod -Uri "http://localhost:3002/api/import" -Method POST -ContentT
 
 ## 4. Importar desde Google Sheets
 
-### Paso 1: Copiar el script
-1. Abre `scripts/google-apps-script.js`
-2. Copia todo el contenido
+Hemos creado un **proyecto completo de Google Apps Script** con menú personalizado y validaciones.
 
-### Paso 2: Configurar en Google Sheets
-1. Abre tu Google Sheet con los datos
-2. **Extensiones** → **Apps Script**
-3. Pega el código
-4. Modifica la línea 20 con tu URL:
+### Instalación Rápida (5 minutos)
+
+1. **Abre tu Google Sheet** con los datos del scraper
+2. Ve a **Extensiones → Apps Script**
+3. **Copia el código** de [`google-apps-script-project/Code.gs`](google-apps-script-project/Code.gs)
+4. **Pega** en el editor y guarda
+5. **Modifica la URL** al inicio del código:
    ```javascript
    const URL_API = 'http://localhost:3002/api/import';
    ```
-5. Guarda (Ctrl+S)
+6. Ejecuta la función **`onOpen()`** y autoriza permisos
+7. **Recarga** tu Google Sheet (F5)
 
-### Paso 3: Ejecutar
-1. Selecciona la función `exportarAAPI` en el dropdown
-2. Haz clic en **Ejecutar** (▶️)
-3. Autoriza los permisos la primera vez
-4. ¡Listo! Los datos se importarán automáticamente
+### Usar el Menú
+
+Verás un nuevo menú **"📊 Exportar Datos"** con opciones:
+
+- **🚀 Exportar productos a API** - Exporta todos los datos
+- **🧪 Probar conexión** - Verifica que la API funcione
+- **📈 Ver resumen de datos** - Estadísticas de tus productos
+- **📖 Ver instrucciones** - Ayuda rápida
+
+### Documentación Completa
+
+- [📖 README del proyecto Apps Script](google-apps-script-project/README.md)
+- [🚀 Guía de instalación paso a paso](google-apps-script-project/INSTALACION.md)
 
 ## 5. Explorar el dashboard
 
@@ -80,9 +89,12 @@ Invoke-RestMethod -Uri "http://localhost:3002/api/import" -Method POST -ContentT
 
 ```
 scrapper-berco/
+├── google-apps-script-project/  # 🆕 Proyecto de Google Apps Script
+│   ├── Code.gs                  # Código del exportador
+│   ├── README.md                # Documentación completa
+│   └── INSTALACION.md          # Guía de instalación
 ├── scripts/
-│   ├── seed-data.json          # Datos de prueba
-│   └── google-apps-script.js   # Script para Google Sheets
+│   └── seed-data.json          # Datos de prueba
 ├── README.md                    # Documentación general
 ├── INSTRUCCIONES.md            # Guía completa paso a paso
 └── INICIO_RAPIDO.md            # Este archivo
