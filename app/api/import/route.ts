@@ -42,13 +42,13 @@ export async function POST(request: NextRequest) {
     const productsToInsert = products.map((p: ProductInput) => ({
       url: p.url || p.URL || '',
       nombre: p.nombre || p.Nombre || '',
-      precio: parseFloat(p.precio || p.Precio || '0'),
+      precio: parseFloat(String(p.precio || p.Precio || '0')),
       descuento: p.descuento || p.Descuento || '',
       categoria: p.categoria || p.Categoria || '',
       proveedor: p.proveedor || p.Proveedor || '',
       status: p.status || p.Status || '',
       fecha_scraping: p.fecha_scraping || p.Fecha || new Date().toISOString(),
-      precioLista: p.precioLista ? parseFloat(p.precioLista) : undefined,
+      precioLista: p.precioLista ? parseFloat(String(p.precioLista)) : undefined,
     }));
 
     insertProducts(productsToInsert);
