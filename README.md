@@ -57,9 +57,38 @@ Hacer una petición POST a `/api/import` con el siguiente formato:
 }
 ```
 
-### Opción 2: Script de Google Apps Script
+### Opción 2: Script de Google Apps Script (Recomendado)
 
-Agregar esta función a tu proyecto de Google Apps Script:
+Hemos creado un **proyecto completo de Google Apps Script** con interfaz de usuario y validaciones.
+
+**📁 Ubicación:** [`google-apps-script-project/`](./google-apps-script-project/)
+
+**Características:**
+- ✅ Menú personalizado en Google Sheets
+- ✅ Validación de datos y confirmaciones
+- ✅ Prueba de conexión antes de exportar
+- ✅ Manejo de errores detallado
+- ✅ Resumen de datos antes de exportar
+
+**Instalación rápida:**
+
+1. Abre tu Google Sheet
+2. Ve a **Extensiones → Apps Script**
+3. Copia el código de [`google-apps-script-project/Code.gs`](./google-apps-script-project/Code.gs)
+4. Pega en el editor y guarda
+5. Ejecuta la función `onOpen()` y autoriza permisos
+6. Recarga tu Google Sheet
+
+**Documentación completa:**
+- [📖 README del proyecto](./google-apps-script-project/README.md)
+- [🚀 Guía de instalación paso a paso](./google-apps-script-project/INSTALACION.md)
+
+---
+
+<details>
+<summary>Opción 2b: Script simple (solo código)</summary>
+
+Si prefieres un script más simple sin interfaz:
 
 ```javascript
 function exportarAAPI() {
@@ -112,6 +141,10 @@ function exportarAAPI() {
 }
 ```
 
+</details>
+
+---
+
 ## Estructura del Proyecto
 
 ```
@@ -128,11 +161,19 @@ scrapper-berco/
 │   ├── ProductTable.tsx   # Tabla de productos
 │   ├── FilterPanel.tsx    # Panel de filtros
 │   ├── PriceAnalysis.tsx  # Análisis de precios
-│   └── ProviderStats.tsx  # Estadísticas de proveedores
+│   ├── ProviderStats.tsx  # Estadísticas de proveedores
+│   └── ThemeToggle.tsx    # Toggle de tema claro/oscuro
+├── google-apps-script-project/  # 🆕 Proyecto de Google Apps Script
+│   ├── Code.gs            # Código principal del exportador
+│   ├── appsscript.json    # Configuración del proyecto
+│   ├── README.md          # Documentación completa
+│   └── INSTALACION.md     # Guía de instalación
 ├── lib/
 │   └── db.ts              # Capa de base de datos
 ├── types/
 │   └── index.ts           # Definiciones TypeScript
+├── scripts/
+│   └── seed-data.json     # Datos de prueba
 └── products.db            # Base de datos SQLite (auto-generada)
 ```
 
