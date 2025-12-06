@@ -22,6 +22,7 @@ export interface ScrapeResult {
   status: ScrapeStatus;
   fechaScraping: string;
   error?: string;
+  imagen?: string;
 }
 
 export interface ScrapeBatchSummary {

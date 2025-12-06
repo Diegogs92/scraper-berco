@@ -46,6 +46,7 @@ export async function GET(request: NextRequest) {
         status: data.status || '',
         fechaScraping: data.fechaScraping || '',
         error: data.error || '',
+        imagen: data.imagen || '',
       };
     });
 
