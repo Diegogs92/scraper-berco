@@ -1,247 +1,105 @@
-# Scraper Berco - Sistema de Análisis de Precios
+# Scraper de precios (Next.js + Firebase + Vercel)
 
-Sistema web para analizar y comparar precios de productos de la competencia.
+Aplicacion web para gestionar URLs de productos, ejecutar scraping por lote y visualizar resultados con filtros y exportes CSV.
 
-## Características
+## Stack
+- Next.js 14 (App Router) + API Routes
+- Firebase Firestore (admin SDK)
+- Scraping con Axios + Cheerio
+- Tailwind CSS + lucide-react
+- Deploy en Vercel + Vercel Cron (cada 2 minutos)
 
-- **Dashboard interactivo** con filtros avanzados
-- **Análisis de precios** por producto (comparación entre proveedores)
-- **Estadísticas por proveedor** (cantidad de productos, precios promedio, descuentos)
-- **Importación de datos** desde Google Sheets
-- **Base de datos SQLite** para desarrollo local
-- **Diseño responsive** con modo oscuro
-
-## Tecnologías
-
-- **Next.js 15** con App Router
-- **TypeScript**
-- **Tailwind CSS**
-- **Better-SQLite3** (base de datos)
-- **Lucide React** (iconos)
-
-## Instalación Local
-
-1. Instalar dependencias:
-```bash
-npm install
+## Estructura
+```
+app/
+  dashboard/page.tsx        # Vista principal
+  api/
+    urls/route.ts           # GET/POST URLs (import/export CSV)
+    urls/[id]/route.ts      # PATCH/DELETE URL
+    resultados/route.ts     # GET resultados (filtros + CSV)
+    scraper/manual/route.ts # Ejecutar lote manual
+    scraper/start/route.ts  # Inicia modo automatico (usa cron)
+    scraper/stop/route.ts   # Detiene modo automatico
+components/
+  URLManager.tsx            # Altas/edicion/import/export de URLs
+  ResultsTable.tsx          # Tabla de resultados con filtros
+  ScraperControls.tsx       # Botones de control
+  ProgressBar.tsx           # Indicador de progreso
+lib/
+  firebase.ts               # Inicializacion de Firebase Admin
+  scraper.ts                # Logica de scraping y batch
+  utils.ts                  # Helpers (CSV, numeros, fechas)
+types/                      # Tipos compartidos
 ```
 
-2. Ejecutar en modo desarrollo:
-```bash
+## Configuracion de Firebase
+1. Crea un proyecto en Firebase y habilita Firestore en modo production.
+2. Crea una cuenta de servicio (Project Settings → Service Accounts → Generate new private key).
+3. Copia el JSON en un archivo seguro y exporta las variables:
+   ```
+   FIREBASE_PROJECT_ID=tu-proyecto
+   FIREBASE_CLIENT_EMAIL=firebase-adminsdk@tu-proyecto.iam.gserviceaccount.com
+   FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nXXXX\n-----END PRIVATE KEY-----\n"
+   ```
+   - Respeta los `\n` en la clave privada.
+   - Alternativa: `FIREBASE_SERVICE_ACCOUNT='{"projectId":"...","clientEmail":"...","privateKey":"..."}'`
+4. Variables opcionales para cliente (no se usan en el dashboard actual pero puedes agregarlas si necesitas SDK de cliente):
+   ```
+   FIREBASE_API_KEY=
+   FIREBASE_AUTH_DOMAIN=
+   FIREBASE_STORAGE_BUCKET=
+   FIREBASE_MESSAGING_SENDER_ID=
+   FIREBASE_APP_ID=
+   ```
+5. Colecciones usadas:
+   - `urls`: { url, proveedor, status, fechaAgregada, ultimoError }
+   - `resultados`: { urlId, url, nombre, precio, descuento, categoria, proveedor, status, fechaScraping, error }
+   - `config/scraper`: { scrapingActivo, ultimaEjecucion }
+
+## Variables de entorno
+Copia `.env.example` a `.env.local` y completa los valores de Firebase.
+
+## Scripts
+- `npm run dev` – ambiente local
+- `npm run build` – build de produccion
+- `npm run start` – serve de build
+
+## Despliegue en Vercel
+1. Conecta el repo a Vercel y selecciona framework Next.js.
+2. Agrega las variables de entorno de Firebase en el proyecto Vercel.
+3. `vercel.json` ya incluye la region y el cron job:
+   ```json
+   {
+     "crons": [
+       { "path": "/api/scraper/start", "schedule": "*/2 * * * *" }
+     ]
+   }
+   ```
+4. Cada ejecucion de cron procesa hasta 300 URLs pendientes con rate-limit de 500ms y tope de 4 minutos.
+
+## Uso del dashboard
+1. **Carga de URLs**
+   - Agrega una URL individual.
+   - Importa CSV pegando la columna de URLs (la primera columna se toma como URL). Evita duplicados automaticamente.
+   - Exporta CSV desde el boton "Exportar".
+2. **Scraping**
+   - `Ejecutar manual`: procesa hasta 300 pendientes en el momento.
+   - `Iniciar automatico`: marca el flag en `config/scraper` y corre un lote; si quedan pendientes seguira en la proxima ejecucion del cron.
+   - `Detener`: apaga el flag `scrapingActivo`.
+3. **Resultados**
+   - Tabla con filtros por proveedor, estado, categoria y busqueda por nombre.
+   - Exporta resultados a CSV.
+   - Indicador de progreso muestra pendientes, en curso, completadas y errores.
+
+## Notas de scraping
+- Detecta proveedor automaticamente segun dominio (VTEX: Supermat, El Amigo, Unimax, Bercovich; Tienda Nube: Tienda Emi, Zeramiko; fallback al hostname).
+- Prioriza precio en meta tags y JSON-LD; luego fragmentos HTML.
+- Extrae breadcrumbs para categoria cuando esten presentes.
+- Rate-limit: 500ms entre requests. Maximo 300 URLs por ejecucion y 4 minutos por lote.
+- Guarda cada resultado en `resultados` y marca el estado de la URL (`done`/`error`).
+
+## Comandos rapidos
+```
+npm install
 npm run dev
 ```
-
-3. Abrir navegador en [http://localhost:3000](http://localhost:3000)
-
-## Importar Datos desde Google Sheets
-
-### Opción 1: API Manual
-
-Hacer una petición POST a `/api/import` con el siguiente formato:
-
-```json
-{
-  "products": [
-    {
-      "url": "https://ejemplo.com/producto",
-      "nombre": "Producto Ejemplo",
-      "precio": 1000,
-      "descuento": "10%",
-      "categoria": "Categoría > Subcategoría",
-      "proveedor": "Proveedor",
-      "status": "OK",
-      "precioLista": 1100
-    }
-  ],
-  "clearBefore": false
-}
-```
-
-### Opción 2: Script de Google Apps Script (Recomendado)
-
-Hemos creado un **proyecto completo de Google Apps Script** con interfaz de usuario y validaciones.
-
-**📁 Ubicación:** [`google-apps-script-project/`](./google-apps-script-project/)
-
-**Características:**
-- ✅ Menú personalizado en Google Sheets
-- ✅ Validación de datos y confirmaciones
-- ✅ Prueba de conexión antes de exportar
-- ✅ Manejo de errores detallado
-- ✅ Resumen de datos antes de exportar
-
-**Instalación rápida:**
-
-1. Abre tu Google Sheet
-2. Ve a **Extensiones → Apps Script**
-3. Copia el código de [`google-apps-script-project/Code.gs`](./google-apps-script-project/Code.gs)
-4. Pega en el editor y guarda
-5. Ejecuta la función `onOpen()` y autoriza permisos
-6. Recarga tu Google Sheet
-
-**Documentación completa:**
-- [📖 README del proyecto](./google-apps-script-project/README.md)
-- [🚀 Guía de instalación paso a paso](./google-apps-script-project/INSTALACION.md)
-
----
-
-<details>
-<summary>Opción 2b: Script simple (solo código)</summary>
-
-Si prefieres un script más simple sin interfaz:
-
-```javascript
-function exportarAAPI() {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Scraper');
-  const data = sheet.getDataRange().getValues();
-
-  const products = [];
-  for (let i = 1; i < data.length; i++) {
-    const row = data[i];
-    if (!row[0]) continue; // Saltar filas vacías
-
-    products.push({
-      url: row[0],
-      nombre: row[1],
-      precio: row[2],
-      descuento: row[3],
-      categoria: row[4],
-      proveedor: row[5],
-      status: row[6],
-      fecha_scraping: new Date().toISOString(),
-      precioLista: row[10] || null
-    });
-  }
-
-  // Para desarrollo local
-  const url = 'http://localhost:3000/api/import';
-
-  // Para producción en Vercel
-  // const url = 'https://tu-proyecto.vercel.app/api/import';
-
-  const options = {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify({
-      products: products,
-      clearBefore: true // Limpiar DB antes de importar
-    }),
-    muteHttpExceptions: true
-  };
-
-  try {
-    const response = UrlFetchApp.fetch(url, options);
-    const result = JSON.parse(response.getContentText());
-    Logger.log('Importación exitosa: ' + result.message);
-    SpreadsheetApp.getUi().alert('Importación exitosa: ' + result.imported + ' productos');
-  } catch (error) {
-    Logger.log('Error: ' + error);
-    SpreadsheetApp.getUi().alert('Error en la importación: ' + error);
-  }
-}
-```
-
-</details>
-
----
-
-## Estructura del Proyecto
-
-```
-scrapper-berco/
-├── app/
-│   ├── api/
-│   │   ├── products/      # API de productos
-│   │   ├── stats/         # API de estadísticas
-│   │   └── import/        # API de importación
-│   ├── layout.tsx         # Layout principal
-│   ├── page.tsx           # Página principal
-│   └── globals.css        # Estilos globales
-├── components/
-│   ├── ProductTable.tsx   # Tabla de productos
-│   ├── FilterPanel.tsx    # Panel de filtros
-│   ├── PriceAnalysis.tsx  # Análisis de precios
-│   ├── ProviderStats.tsx  # Estadísticas de proveedores
-│   └── ThemeToggle.tsx    # Toggle de tema claro/oscuro
-├── google-apps-script-project/  # 🆕 Proyecto de Google Apps Script
-│   ├── Code.gs            # Código principal del exportador
-│   ├── appsscript.json    # Configuración del proyecto
-│   ├── README.md          # Documentación completa
-│   └── INSTALACION.md     # Guía de instalación
-├── lib/
-│   └── db.ts              # Capa de base de datos
-├── types/
-│   └── index.ts           # Definiciones TypeScript
-├── scripts/
-│   └── seed-data.json     # Datos de prueba
-└── products.db            # Base de datos SQLite (auto-generada)
-```
-
-## Deployment en Vercel
-
-### 1. Preparar el proyecto
-
-```bash
-# Instalar Vercel CLI (opcional)
-npm i -g vercel
-
-# Iniciar sesión
-vercel login
-```
-
-### 2. Configurar proyecto en Vercel
-
-1. Ir a [vercel.com](https://vercel.com)
-2. Hacer clic en "New Project"
-3. Importar el repositorio
-4. Vercel detectará automáticamente Next.js
-
-### 3. Configurar Firebase (persistencia en Vercel)
-
-1. Crea una cuenta de servicio en Firebase con acceso a Firestore.
-2. En Vercel ve a **Settings → Environment Variables** y agrega:
-   - `FIREBASE_PROJECT_ID`
-   - `FIREBASE_CLIENT_EMAIL`
-   - `FIREBASE_PRIVATE_KEY` (usa `\n` en los saltos de línea)
-   - Opcional: `FIREBASE_SERVICE_ACCOUNT` con el JSON completo.
-3. Con esas variables, el backend usa Firestore automáticamente en Vercel. En local sigue usando SQLite.
-
-> Sin Firebase los datos se pierden en Vercel porque SQLite es efímero en cada deploy.
-
-### 4. Deploy
-
-```bash
-# Deploy a producción
-vercel --prod
-```
-
-### Nota sobre la base de datos en Vercel
-
-- **Firestore (recomendado ahora)**: se activa al definir `FIREBASE_PROJECT_ID` y credenciales; persiste entre deploys.
-- **SQLite**: solo para desarrollo local (se borra en cada build en Vercel).
-- **Alternativas**: Vercel Postgres, Supabase, PlanetScale o MongoDB Atlas si prefieres SQL/NoSQL distinto.
-
-## Filtros Disponibles
-
-- **Búsqueda** por nombre o categoría
-- **Proveedor** (dropdown)
-- **Categoría** (dropdown)
-- **Rango de precios** (mínimo y máximo)
-- **Solo con descuento** (checkbox)
-
-## Análisis
-
-### Análisis de Precios
-- Muestra productos con mayor diferencia de precio entre proveedores
-- Indica proveedor más barato y más caro
-- Calcula porcentaje de diferencia
-
-### Estadísticas por Proveedor
-- Cantidad de productos
-- Precio promedio
-- Productos con descuento
-- Descuento promedio
-
-## Licencia
-
-MIT
