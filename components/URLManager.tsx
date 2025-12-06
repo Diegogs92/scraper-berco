@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Edit3, Loader2, Trash, Upload, Search, ChevronLeft, ChevronRight, X, Plus } from 'lucide-react';
+import { Edit3, Loader2, Trash, Upload, Search, ChevronLeft, ChevronRight, X, Plus, CheckCircle2, XCircle, Clock, AlertCircle } from 'lucide-react';
 import { UrlItem } from '@/types';
 
 type Props = {
@@ -119,18 +119,35 @@ export default function URLManager({ onChange }: Props) {
     }
   };
 
-  const editUrl = async (id: string, current: string) => {
-    const updated = prompt('Editar URL', current);
-    if (!updated || updated === current) return;
+  const [editingUrl, setEditingUrl] = useState<{ id: string; url: string } | null>(null);
+  const [editUrlValue, setEditUrlValue] = useState('');
+
+  const openEditModal = (id: string, url: string) => {
+    setEditingUrl({ id, url });
+    setEditUrlValue(url);
+  };
+
+  const closeEditModal = () => {
+    setEditingUrl(null);
+    setEditUrlValue('');
+  };
+
+  const saveEditUrl = async () => {
+    if (!editingUrl || !editUrlValue.trim() || editUrlValue === editingUrl.url) {
+      closeEditModal();
+      return;
+    }
+
     setLoading(true);
     try {
-      await fetch(`/api/urls/${id}`, {
+      await fetch(`/api/urls/${editingUrl.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: updated }),
+        body: JSON.stringify({ url: editUrlValue }),
       });
       await loadUrls();
       onChange?.();
+      closeEditModal();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'No se pudo editar';
       setMessage(msg);
@@ -300,7 +317,7 @@ export default function URLManager({ onChange }: Props) {
         <form onSubmit={addUrl} className="flex gap-2">
           <input
             className="flex-1 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400 placeholder:text-white/40"
-            placeholder="Pega una URL o varias separadas por línea"
+            placeholder="Agrega la URL de un nuevo producto"
             value={newUrl}
             onChange={(e) => setNewUrl(e.target.value)}
           />
@@ -308,6 +325,7 @@ export default function URLManager({ onChange }: Props) {
             type="submit"
             className="btn bg-emerald-500 text-white hover:bg-emerald-400 px-4"
             disabled={loading}
+            title="Agregar URL"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
           </button>
@@ -373,25 +391,21 @@ export default function URLManager({ onChange }: Props) {
                   </td>
                   <td className="px-3 py-2 align-top">{u.proveedor}</td>
                   <td className="px-3 py-2 align-top">
-                    <span
-                      className={`rounded-full px-2 py-1 text-xs ${
-                        u.status === 'done'
-                          ? 'bg-emerald-500/30 text-emerald-100'
-                          : u.status === 'error'
-                          ? 'bg-rose-500/30 text-rose-100'
-                          : u.status === 'processing'
-                          ? 'bg-sky-500/30 text-sky-100'
-                          : 'bg-amber-500/30 text-amber-50'
-                      }`}
-                    >
-                      {u.status}
-                    </span>
+                    {u.status === 'done' ? (
+                      <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    ) : u.status === 'error' ? (
+                      <XCircle className="h-5 w-5 text-rose-400" />
+                    ) : u.status === 'processing' ? (
+                      <Loader2 className="h-5 w-5 text-sky-400 animate-spin" />
+                    ) : (
+                      <Clock className="h-5 w-5 text-amber-400" />
+                    )}
                   </td>
                   <td className="px-3 py-2 text-right">
                     <div className="flex justify-end gap-2">
                       <button
                         className="rounded-lg bg-white/5 p-2 text-white hover:bg-white/10"
-                        onClick={() => editUrl(u.id, u.url)}
+                        onClick={() => openEditModal(u.id, u.url)}
                         title="Editar URL"
                       >
                         <Edit3 className="h-4 w-4" />
@@ -435,6 +449,61 @@ export default function URLManager({ onChange }: Props) {
               Siguiente
               <ChevronRight className="h-4 w-4" />
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Edit URL Modal */}
+      {editingUrl && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="card w-full max-w-2xl p-6 mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-white">Editar URL</h3>
+              <button
+                onClick={closeEditModal}
+                className="text-white/60 hover:text-white"
+                disabled={loading}
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-white/90 mb-2">URL del producto</label>
+                <input
+                  type="text"
+                  value={editUrlValue}
+                  onChange={(e) => setEditUrlValue(e.target.value)}
+                  className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+                  placeholder="https://ejemplo.com/producto"
+                  autoFocus
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      saveEditUrl();
+                    }
+                  }}
+                />
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={closeEditModal}
+                  className="btn bg-white/10 text-white hover:bg-white/20"
+                  disabled={loading}
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={saveEditUrl}
+                  className="btn bg-emerald-500 text-white hover:bg-emerald-400"
+                  disabled={loading || !editUrlValue.trim()}
+                >
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Guardar'}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

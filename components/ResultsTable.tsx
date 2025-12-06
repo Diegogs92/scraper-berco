@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { FileDown, Loader2, RefreshCw, Search, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { FileDown, Loader2, Search, ChevronLeft, ChevronRight, X, CheckCircle2, XCircle } from 'lucide-react';
 import { ResultFilter, ScrapeResult } from '@/types';
 
 type Props = {
@@ -175,15 +175,11 @@ export default function ResultsTable({ onRefresh }: Props) {
                   <td className="px-4 py-3 text-white/80">{r.proveedor}</td>
                   <td className="px-4 py-3 text-white/70">{r.categoria || '-'}</td>
                   <td className="px-4 py-3">
-                    <span
-                      className={`rounded-full px-2 py-1 text-xs ${
-                        r.status === 'success'
-                          ? 'bg-emerald-500/30 text-emerald-100'
-                          : 'bg-rose-500/30 text-rose-100'
-                      }`}
-                    >
-                      {r.status}
-                    </span>
+                    {r.status === 'success' ? (
+                      <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                    ) : (
+                      <XCircle className="h-5 w-5 text-rose-400" />
+                    )}
                   </td>
                   <td className="px-4 py-3 text-xs text-white/60 whitespace-nowrap">
                     {r.fechaScraping ? new Date(r.fechaScraping).toLocaleDateString('es-AR', {
