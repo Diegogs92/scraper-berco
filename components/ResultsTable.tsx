@@ -61,51 +61,38 @@ export default function ResultsTable({ onRefresh }: Props) {
 
   return (
     <div className="card flex h-full flex-col gap-4 p-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-white/60">Resultados</p>
-          <h3 className="text-lg font-semibold text-white">Últimos scraping</h3>
+          <p className="text-xs uppercase tracking-[0.2em] text-white/60">Paso 3</p>
+          <h3 className="text-lg font-semibold text-white">Revisa los resultados</h3>
           <p className="text-xs text-white/50 mt-1">
-            {totalCount > 0 && `${totalCount} resultados totales`}
+            {totalCount > 0 ? `${totalCount} productos scrapeados` : 'Los resultados aparecerán aquí'}
           </p>
         </div>
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={() => {
-              loadResults();
-              onRefresh?.();
-            }}
-            className="btn bg-white/10 text-white hover:bg-white/20"
-            disabled={loading}
-          >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
-            Refrescar
-          </button>
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        {totalCount > 0 && (
           <a
             href="/api/resultados?format=csv"
-            className="btn bg-white/10 text-white hover:bg-white/20"
-            title="Exportar resultados"
+            className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
           >
-            <FileDown className="h-4 w-4" />
-            Exportar
+            <FileDown className="h-3 w-3" />
+            Exportar CSV
           </a>
-        </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-5">
-        <div className="col-span-2 relative flex items-center gap-2 rounded-lg border border-white/10 bg-black/30 px-3">
-          <Search className="h-4 w-4 text-white/40" />
+      <div className="flex flex-col gap-2 md:flex-row">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
           <input
-            className="w-full bg-transparent py-2 text-sm text-white outline-none pr-8"
-            placeholder="Buscar por nombre"
+            className="w-full rounded-lg border border-white/10 bg-black/30 py-2 pl-10 pr-10 text-sm text-white outline-none focus:border-emerald-400"
+            placeholder="Buscar productos..."
             value={filters.search || ''}
             onChange={(e) => updateFilter('search', e.target.value)}
           />
           {filters.search && (
             <button
               onClick={() => updateFilter('search', '')}
-              className="absolute right-3 text-white/40 hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white"
             >
               <X className="h-4 w-4" />
             </button>
@@ -120,30 +107,15 @@ export default function ResultsTable({ onRefresh }: Props) {
           <option value="success">Exitosos</option>
           <option value="error">Con error</option>
         </select>
-        <input
-          className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
-          placeholder="Proveedor"
-          value={filters.proveedor || ''}
-          onChange={(e) => updateFilter('proveedor', e.target.value)}
-        />
-        <input
-          className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
-          placeholder="Categoría"
-          value={filters.categoria || ''}
-          onChange={(e) => updateFilter('categoria', e.target.value)}
-        />
       </div>
 
       {hasActiveFilters && (
-        <div className="flex items-center gap-2">
-          <span className="text-xs text-white/60">Filtros activos</span>
-          <button
-            onClick={clearFilters}
-            className="text-xs text-emerald-400 hover:text-emerald-300 underline"
-          >
-            Limpiar todos
-          </button>
-        </div>
+        <button
+          onClick={clearFilters}
+          className="text-xs text-emerald-400 hover:text-emerald-300 self-start"
+        >
+          Limpiar filtros
+        </button>
       )}
 
       <div className="flex-1 overflow-auto rounded-lg border border-white/5">

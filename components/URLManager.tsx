@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Edit3, Loader2, Plus, Trash, Upload, FileDown, Search, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { Edit3, Loader2, Trash, Upload, Search, ChevronLeft, ChevronRight, X, Plus } from 'lucide-react';
 import { UrlItem } from '@/types';
 
 type Props = {
@@ -10,7 +10,6 @@ export default function URLManager({ onChange }: Props) {
   const [urls, setUrls] = useState<UrlItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [newUrl, setNewUrl] = useState('');
-  const [csvText, setCsvText] = useState('');
   const [message, setMessage] = useState('');
 
   // Pagination
@@ -62,44 +61,43 @@ export default function URLManager({ onChange }: Props) {
   const addUrl = async (e: FormEvent) => {
     e.preventDefault();
     if (!newUrl.trim()) return;
+
     setLoading(true);
     setMessage('');
+
     try {
-      const res = await fetch('/api/urls', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: newUrl }),
-      });
-      const data = await res.json();
-      if (data.error) setMessage(data.error);
+      // Check if input contains multiple lines (batch import)
+      const lines = newUrl.trim().split('\n').filter(line => line.trim());
+
+      if (lines.length > 1) {
+        // Batch import
+        const res = await fetch('/api/urls', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ csv: newUrl }),
+        });
+        const data = await res.json();
+        setMessage(`✓ ${data.inserted || 0} URLs agregadas`);
+      } else {
+        // Single URL
+        const res = await fetch('/api/urls', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: newUrl }),
+        });
+        const data = await res.json();
+        if (data.error) {
+          setMessage(data.error);
+        } else {
+          setMessage('✓ URL agregada');
+        }
+      }
+
       setNewUrl('');
       await loadUrls();
       onChange?.();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'No se pudo agregar';
-      setMessage(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const importCsv = async () => {
-    if (!csvText.trim()) return;
-    setLoading(true);
-    setMessage('');
-    try {
-      const res = await fetch('/api/urls', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ csv: csvText }),
-      });
-      const data = await res.json();
-      setMessage(`Importadas: ${data.inserted || 0} de ${data.totalReceived || 0}`);
-      setCsvText('');
-      await loadUrls();
-      onChange?.();
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Error al importar CSV';
+      const msg = err instanceof Error ? err.message : 'Error al agregar';
       setMessage(msg);
     } finally {
       setLoading(false);
@@ -221,33 +219,22 @@ export default function URLManager({ onChange }: Props) {
     <div className="card flex h-full flex-col gap-4 p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-white/60">URLs</p>
-          <h3 className="text-lg font-semibold text-white">Gestiona las URLs a scrapear</h3>
+          <p className="text-xs uppercase tracking-[0.2em] text-white/60">Paso 1</p>
+          <h3 className="text-lg font-semibold text-white">Agrega URLs</h3>
           <p className="text-xs text-white/50 mt-1">
-            {totalCount > 0 && `${totalCount} URLs totales`}
+            {totalCount > 0 ? `${totalCount} URLs cargadas` : 'Comienza agregando URLs para scrapear'}
           </p>
         </div>
-        <div className="flex gap-2">
-          {selectedIds.size > 0 && (
-            <button
-              onClick={bulkDelete}
-              className="btn bg-rose-500/30 text-white hover:bg-rose-500/50"
-              title="Eliminar seleccionadas"
-            >
-              <Trash className="h-4 w-4" />
-              Eliminar ({selectedIds.size})
-            </button>
-          )}
-          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-          <a
-            href="/api/urls?format=csv"
-            className="btn bg-white/10 text-white hover:bg-white/20"
-            title="Exportar CSV"
+        {selectedIds.size > 0 && (
+          <button
+            onClick={bulkDelete}
+            className="btn bg-rose-500/30 text-white hover:bg-rose-500/50"
+            title="Eliminar seleccionadas"
           >
-            <FileDown className="h-4 w-4" />
-            Exportar
-          </a>
-        </div>
+            <Trash className="h-4 w-4" />
+            ({selectedIds.size})
+          </button>
+        )}
       </div>
 
       {/* Search and Filters */}
@@ -288,29 +275,10 @@ export default function URLManager({ onChange }: Props) {
         </select>
       </div>
 
-      <form onSubmit={addUrl} className="flex flex-col gap-3">
-        <label className="text-sm text-white/70">Agregar URL individual</label>
-        <div className="flex flex-col gap-2 md:flex-row">
-          <input
-            className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
-            placeholder="https://tienda.com/producto"
-            value={newUrl}
-            onChange={(e) => setNewUrl(e.target.value)}
-          />
-          <button
-            type="submit"
-            className="btn bg-emerald-500 text-white hover:bg-emerald-400 md:w-40"
-            disabled={loading}
-          >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
-            Agregar
-          </button>
-        </div>
-      </form>
-
-      <div className="flex flex-col gap-2">
-        <label className="text-sm text-white/70">Importar desde archivo o pegar texto</label>
-        <div className="flex gap-2">
+      {/* Simplified unified input */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-medium text-white/90">Agregar URLs</label>
           <input
             ref={fileInputRef}
             type="file"
@@ -321,32 +289,35 @@ export default function URLManager({ onChange }: Props) {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="btn bg-white/10 text-white hover:bg-white/20"
+            className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
             disabled={loading}
           >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-            Subir archivo CSV
+            <Upload className="h-3 w-3" />
+            Subir archivo
           </button>
-          <span className="text-xs text-white/50 self-center">o pega el texto abajo</span>
         </div>
-        <textarea
-          className="min-h-[100px] w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
-          placeholder="Pega una columna de URLs o un CSV con la primera columna = URL"
-          value={csvText}
-          onChange={(e) => setCsvText(e.target.value)}
-        />
-        <div className="flex gap-2 items-center">
+
+        <form onSubmit={addUrl} className="flex gap-2">
+          <input
+            className="flex-1 rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400 placeholder:text-white/40"
+            placeholder="Pega una URL o varias separadas por línea"
+            value={newUrl}
+            onChange={(e) => setNewUrl(e.target.value)}
+          />
           <button
-            type="button"
-            onClick={importCsv}
-            className="btn bg-emerald-500 text-white hover:bg-emerald-400"
-            disabled={loading || !csvText.trim()}
+            type="submit"
+            className="btn bg-emerald-500 text-white hover:bg-emerald-400 px-4"
+            disabled={loading}
           >
-            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-            Importar texto
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
           </button>
-          {message && <span className="text-sm text-amber-300">{message}</span>}
-        </div>
+        </form>
+
+        {message && (
+          <div className="text-xs text-emerald-300 bg-emerald-500/10 px-3 py-2 rounded-lg">
+            {message}
+          </div>
+        )}
       </div>
 
       <div className="mt-2 flex-1 overflow-auto rounded-lg border border-white/5">
