@@ -11,20 +11,44 @@ export default function ScraperControls({ onRefresh, totals }: Props) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [config, setConfig] = useState<ScraperConfig>({ scrapingActivo: false });
+  const [isPolling, setIsPolling] = useState(false);
 
   const loadStatus = useCallback(async () => {
     try {
       const res = await fetch('/api/urls?limit=1');
       const data = await res.json();
       setConfig(data.config || { scrapingActivo: false });
+      return data.config?.scrapingActivo || false;
     } catch (err) {
       console.error(err);
+      return false;
     }
   }, []);
 
   useEffect(() => {
     loadStatus();
   }, [loadStatus]);
+
+  // Auto-refresh when scraping is active (polling every 5 seconds)
+  useEffect(() => {
+    if (config.scrapingActivo || totals.processing > 0) {
+      setIsPolling(true);
+      const interval = setInterval(async () => {
+        const status = await loadStatus();
+        onRefresh?.();
+
+        // Stop polling if scraping is no longer active and no items are processing
+        if (!status && totals.processing === 0) {
+          setIsPolling(false);
+          clearInterval(interval);
+        }
+      }, 5000); // Poll every 5 seconds
+
+      return () => clearInterval(interval);
+    } else {
+      setIsPolling(false);
+    }
+  }, [config.scrapingActivo, totals.processing, loadStatus, onRefresh]);
 
   const run = async (path: string, label: string) => {
     setLoading(true);
@@ -58,13 +82,21 @@ export default function ScraperControls({ onRefresh, totals }: Props) {
   return (
     <div className="card flex flex-col gap-3 p-4">
       <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-xs uppercase tracking-[0.2em] text-white/60">Control</p>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <p className="text-xs uppercase tracking-[0.2em] text-white/60">Control</p>
+            {isPolling && (
+              <span className="flex items-center gap-1 text-xs text-emerald-400">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Actualizando en vivo
+              </span>
+            )}
+          </div>
           <h3 className="text-lg font-semibold text-white">
-            {config.scrapingActivo ? 'Automatico activo' : 'Listo para ejecutar'}
+            {config.scrapingActivo ? 'Automático activo' : 'Listo para ejecutar'}
           </h3>
           <p className="text-sm text-white/70">
-            Ultima ejecucion:{' '}
+            Última ejecución:{' '}
             {config.ultimaEjecucion ? new Date(config.ultimaEjecucion).toLocaleString() : 'N/D'}
           </p>
         </div>

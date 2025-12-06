@@ -12,37 +12,50 @@ export async function GET(request: NextRequest) {
     const search = params.get('search')?.toLowerCase();
     const format = params.get('format');
     const limit = Math.min(parseInt(params.get('limit') || '200', 10), 500);
+    const offset = parseInt(params.get('offset') || '0', 10);
 
-    const snapshot = await db
-      .collection('resultados')
-      .orderBy('fechaScraping', 'desc')
-      .limit(limit)
-      .get();
+    // Build query with filters
+    let query = db.collection('resultados').orderBy('fechaScraping', 'desc');
 
-    const results: ScrapeResult[] = snapshot.docs
-      .map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          urlId: data.urlId || '',
-          url: data.url || '',
-          nombre: data.nombre || '',
-          precio: Number(data.precio) || 0,
-          descuento: data.descuento || '',
-          categoria: data.categoria || '',
-          proveedor: data.proveedor || '',
-          status: data.status || '',
-          fechaScraping: data.fechaScraping || '',
-          error: data.error || '',
-        };
-      })
-      .filter((item) => {
-        if (proveedor && item.proveedor !== proveedor) return false;
-        if (status && item.status !== status) return false;
-        if (categoria && !item.categoria.toLowerCase().includes(categoria)) return false;
-        if (search && !item.nombre.toLowerCase().includes(search)) return false;
-        return true;
-      });
+    if (proveedor) {
+      query = query.where('proveedor', '==', proveedor);
+    }
+    if (status) {
+      query = query.where('status', '==', status);
+    }
+
+    // Get total count for pagination
+    const countQuery = proveedor || status ? query : db.collection('resultados');
+    const totalSnapshot = await countQuery.count().get();
+    const total = totalSnapshot.data().count;
+
+    // Get paginated data
+    const snapshot = await query.limit(limit).offset(offset).get();
+
+    let results: ScrapeResult[] = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        urlId: data.urlId || '',
+        url: data.url || '',
+        nombre: data.nombre || '',
+        precio: Number(data.precio) || 0,
+        descuento: data.descuento || '',
+        categoria: data.categoria || '',
+        proveedor: data.proveedor || '',
+        status: data.status || '',
+        fechaScraping: data.fechaScraping || '',
+        error: data.error || '',
+      };
+    });
+
+    // Client-side filters (Firestore doesn't support contains or multiple inequality)
+    if (categoria) {
+      results = results.filter(item => item.categoria.toLowerCase().includes(categoria));
+    }
+    if (search) {
+      results = results.filter(item => item.nombre.toLowerCase().includes(search));
+    }
 
     if (format === 'csv') {
       const csv = toCsv(
@@ -68,7 +81,7 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    return NextResponse.json({ results });
+    return NextResponse.json({ results, total });
   } catch (error) {
     console.error('GET /api/resultados error', error);
     return NextResponse.json({ error: 'No se pudieron obtener los resultados' }, { status: 500 });

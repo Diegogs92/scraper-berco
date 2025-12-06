@@ -12,27 +12,42 @@ export async function GET(request: NextRequest) {
     const search = params.get('search')?.toLowerCase();
     const format = params.get('format');
     const limit = Math.min(parseInt(params.get('limit') || '200', 10), 500);
+    const offset = parseInt(params.get('offset') || '0', 10);
 
-    const snapshot = await db.collection('urls').orderBy('fechaAgregada', 'desc').limit(limit).get();
+    // Build query with filters
+    let query = db.collection('urls').orderBy('fechaAgregada', 'desc');
 
-    const urls: UrlItem[] = snapshot.docs
-      .map((doc) => {
-        const data = doc.data();
-        return {
-          id: doc.id,
-          url: data.url || '',
-          proveedor: data.proveedor || detectProveedor(data.url || ''),
-          status: data.status || 'pending',
-          fechaAgregada: data.fechaAgregada || data.fecha || '',
-          ultimoError: data.ultimoError || null,
-        };
-      })
-      .filter((item) => {
-        if (status && item.status !== status) return false;
-        if (proveedor && item.proveedor !== proveedor) return false;
-        if (search && !item.url.toLowerCase().includes(search)) return false;
-        return true;
-      });
+    if (status) {
+      query = query.where('status', '==', status);
+    }
+    if (proveedor) {
+      query = query.where('proveedor', '==', proveedor);
+    }
+
+    // Get total count for pagination
+    const countQuery = status || proveedor ? query : db.collection('urls');
+    const totalSnapshot = await countQuery.count().get();
+    const total = totalSnapshot.data().count;
+
+    // Get paginated data
+    const snapshot = await query.limit(limit).offset(offset).get();
+
+    let urls: UrlItem[] = snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        url: data.url || '',
+        proveedor: data.proveedor || detectProveedor(data.url || ''),
+        status: data.status || 'pending',
+        fechaAgregada: data.fechaAgregada || data.fecha || '',
+        ultimoError: data.ultimoError || null,
+      };
+    });
+
+    // Client-side filter for search (Firestore doesn't support contains)
+    if (search) {
+      urls = urls.filter(item => item.url.toLowerCase().includes(search));
+    }
 
     if (format === 'csv') {
       const csv = toCsv(
@@ -73,7 +88,7 @@ export async function GET(request: NextRequest) {
       ultimaEjecucion: configDoc.data()?.ultimaEjecucion || '',
     };
 
-    return NextResponse.json({ urls, totals, config });
+    return NextResponse.json({ urls, totals, config, total });
   } catch (error) {
     console.error('GET /api/urls error', error);
     return NextResponse.json({ error: 'No se pudieron obtener las URLs' }, { status: 500 });
