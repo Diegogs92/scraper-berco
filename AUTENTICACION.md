@@ -10,6 +10,7 @@ El sistema ahora requiere autenticación para acceder al dashboard. Existen 3 ti
    - Máximo nivel de permisos
    - Puede crear otros desarrolladores
    - Puede administrar todos los usuarios
+   - Puede limpiar el sistema completo
    - Solo tú eres desarrollador
 
 2. **Administrador**
@@ -118,6 +119,70 @@ Si no se configura, se usará una clave por defecto (no recomendado para producc
 | Administrar usuarios | ❌ | ✅ | ✅ |
 | Crear desarrolladores | ❌ | ❌ | ✅ |
 | Modificar desarrolladores | ❌ | ❌ | ✅ |
+| Limpiar sistema | ❌ | ❌ | ✅ |
+
+## Limpiar el Sistema
+
+Como desarrollador, puedes limpiar la información del scraper para comenzar de cero:
+
+### Acceso
+
+1. Haz clic en tu perfil (esquina superior derecha)
+2. Selecciona "Limpiar sistema"
+
+### Opciones de Limpieza
+
+**Eliminar todas las URLs**
+- Elimina todas las URLs (pendientes, en proceso, completadas, con errores)
+- Los resultados del scraping permanecen intactos
+- Útil para limpiar la cola de trabajo
+
+**Eliminar todos los resultados**
+- Elimina todos los productos scrapeados
+- Las URLs permanecen para poder volver a scrapear
+- Útil para limpiar el historial de scraping
+
+**Limpiar TODO el sistema**
+- Elimina URLs y resultados
+- Resetea el estado del scraper
+- El sistema queda completamente limpio
+- ⚠️ Acción irreversible
+
+### API para Limpieza
+
+También puedes limpiar vía API:
+
+```bash
+# Limpiar solo URLs
+curl -X POST https://scraper-berco.vercel.app/api/admin/clear \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer TU_TOKEN" \
+  -d '{"type": "urls"}'
+
+# Limpiar solo resultados
+curl -X POST https://scraper-berco.vercel.app/api/admin/clear \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer TU_TOKEN" \
+  -d '{"type": "resultados"}'
+
+# Limpiar todo
+curl -X POST https://scraper-berco.vercel.app/api/admin/clear \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer TU_TOKEN" \
+  -d '{"type": "all"}'
+```
+
+## Comparación de Precios
+
+El sistema incluye una sección de comparación de precios que:
+
+- Agrupa productos por nombre
+- Compara precios entre diferentes proveedores
+- Muestra el mejor precio disponible
+- Calcula el ahorro potencial
+- Incluye enlaces directos a cada producto
+
+La sección se actualiza automáticamente y se encuentra en la parte inferior del dashboard.
 
 ## Cerrar Sesión
 

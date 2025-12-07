@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, User, Shield, Settings } from 'lucide-react';
+import { LogOut, User, Shield, Settings, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function UserMenu() {
@@ -57,6 +57,17 @@ export default function UserMenu() {
                 >
                   <Settings className="h-4 w-4" />
                   Administrar usuarios
+                </Link>
+              )}
+
+              {user.rol === 'desarrollador' && (
+                <Link
+                  href="/admin/limpiar"
+                  className="flex items-center gap-2 px-4 py-2 text-sm text-white/80 hover:bg-white/5 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Trash2 className="h-4 w-4" />
+                  Limpiar sistema
                 </Link>
               )}
 
