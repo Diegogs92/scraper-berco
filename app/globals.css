@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --surface: #0b1220;
-  --card: #111827;
-  --card-muted: #1c2434;
-  --accent: #2563eb;
-  --accent-strong: #0ea5e9;
+  --surface: #0d0f12;
+  --card: #14171c;
+  --card-muted: #1d2026;
+  --accent: #f97316;
+  --accent-strong: #ea580c;
   --error: #ef4444;
   --foreground: #e5e7eb;
 
@@ -34,7 +34,8 @@
 }
 
 .theme-dark body {
-  background: linear-gradient(160deg, #0b1220 0%, #0f172a 50%, #111827 100%);
+  background: radial-gradient(circle at 15% 20%, rgba(249, 115, 22, 0.06), transparent 30%),
+    linear-gradient(160deg, #0b0d10 0%, #0f1116 50%, #11141a 100%);
   background-attachment: fixed;
   color: var(--foreground);
   min-height: 100vh;
@@ -47,7 +48,7 @@
   --surface: #f5f7fb;
   --card: #ffffff;
   --card-muted: #eef2f7;
-  --accent: #2563eb;
+  --accent: #f97316;
   --accent-strong: #0b1220;
   --error: #ef4444;
   --foreground: #0f172a;

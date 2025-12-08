@@ -24,12 +24,12 @@ export default function Navbar({ activeSection, onSectionChange }: Props) {
   ];
 
   return (
-    <nav className="sticky top-0 z-40 mb-6 bg-black/50 backdrop-blur-lg border border-white/10 rounded-xl shadow-md">
-      <div className="px-4 py-3 md:px-6 md:py-4">
+    <nav className="sticky top-0 z-40 mb-6 bg-[#111214]/90 backdrop-blur-lg border border-white/10 rounded-xl shadow-md">
+      <div className="px-4 py-3 md:px-6 md:py-3">
         <div className="flex items-center justify-between gap-6">
           {/* Logo and Brand */}
           <div className="flex items-center gap-4">
-            <Logo className="h-9 w-9" />
+            <Logo className="h-9 w-9 text-white" />
             <div>
               <h1 className="text-xl font-bold text-white tracking-tight">Scraper Berco</h1>
               <p className="text-xs text-white/50 hidden sm:block mt-0.5">
@@ -47,16 +47,16 @@ export default function Navbar({ activeSection, onSectionChange }: Props) {
                 <button
                   key={item.id}
                   onClick={() => onSectionChange(item.id)}
-                  className={`relative flex items-center gap-2.5 px-5 py-2.5 rounded-xl font-semibold transition-all duration-300 ${
+                  className={`relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#16DB93] to-[#598392] text-white shadow-lg shadow-[#16DB93]/25'
-                      : 'text-white/60 hover:text-white hover:bg-white/5'
+                      ? 'text-[#f97316]'
+                      : 'text-white/70 hover:text-white'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
                   <span className="text-sm">{item.label}</span>
                   {isActive && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#16DB93] to-[#598392] rounded-xl blur-md opacity-30 -z-10"></div>
+                    <div className="absolute left-2 right-2 -bottom-1 h-6 bg-[#f97316]/20 blur-md rounded-full -z-10"></div>
                   )}
                 </button>
               );
@@ -64,7 +64,7 @@ export default function Navbar({ activeSection, onSectionChange }: Props) {
           </div>
 
           {/* Right side actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <PriceAlertsBadge onSelect={() => onSectionChange('evolucion')} />
             <div className="h-6 w-px bg-white/10"></div>
             <ThemeToggle />
