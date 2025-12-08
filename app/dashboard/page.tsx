@@ -8,12 +8,11 @@ import Navbar from '@/components/Navbar';
 import URLSection from '@/components/sections/URLSection';
 import ResultsSection from '@/components/sections/ResultsSection';
 import StatsSection from '@/components/sections/StatsSection';
-import UserSection from '@/components/sections/UserSection';
 import { ProgressTotals } from '@/types';
 
 const emptyTotals: ProgressTotals = { pending: 0, processing: 0, done: 0, error: 0 };
 
-type NavSection = 'urls' | 'resultados' | 'estadisticas' | 'usuario';
+type NavSection = 'urls' | 'resultados' | 'estadisticas';
 
 function DashboardContent() {
   const [totals, setTotals] = useState<ProgressTotals>(emptyTotals);
@@ -40,8 +39,6 @@ function DashboardContent() {
         return <ResultsSection onRefresh={refreshProgress} />;
       case 'estadisticas':
         return <StatsSection totals={totals} />;
-      case 'usuario':
-        return <UserSection onShowGuide={() => setShowGuide(true)} />;
       default:
         return <URLSection totals={totals} onRefresh={refreshProgress} />;
     }

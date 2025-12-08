@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Link2, FileText, BarChart3, User, Menu, X } from 'lucide-react';
+import { Link2, FileText, BarChart3, Menu, X } from 'lucide-react';
 import Logo from './Logo';
 import ThemeToggle from './ThemeToggle';
 import UserMenu from './UserMenu';
 
-type NavSection = 'urls' | 'resultados' | 'estadisticas' | 'usuario';
+type NavSection = 'urls' | 'resultados' | 'estadisticas';
 
 type Props = {
   activeSection: NavSection;
@@ -20,7 +20,6 @@ export default function Navbar({ activeSection, onSectionChange }: Props) {
     { id: 'urls' as NavSection, label: 'Agregar URLs', icon: Link2 },
     { id: 'resultados' as NavSection, label: 'Resultados', icon: FileText },
     { id: 'estadisticas' as NavSection, label: 'Estadísticas', icon: BarChart3 },
-    { id: 'usuario' as NavSection, label: 'Usuario', icon: User },
   ];
 
   return (

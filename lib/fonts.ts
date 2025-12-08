@@ -104,7 +104,7 @@ export const rubik = Rubik({
 // ACTIVE FONT
 // ====================
 // Change this to use a different font throughout the app
-export const activeFont = spaceGrotesk;
+export const activeFont = plusJakartaSans;
 
 /**
  * Font Recommendations:
