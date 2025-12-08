@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Loader2, Play, Square } from 'lucide-react';
+import { toast } from 'sonner';
 import { ProgressTotals, ScrapeBatchSummary, ScraperConfig } from '@/types';
 
 type Props = {
@@ -9,7 +10,6 @@ type Props = {
 
 export default function ScraperControls({ onRefresh, totals }: Props) {
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
   const [config, setConfig] = useState<ScraperConfig>({ scrapingActivo: false });
   const [isPolling, setIsPolling] = useState(false);
 
@@ -52,28 +52,27 @@ export default function ScraperControls({ onRefresh, totals }: Props) {
 
   const run = async (path: string, label: string) => {
     setLoading(true);
-    setMessage('');
     try {
       const res = await fetch(path, { method: 'POST' });
       const data: ScrapeBatchSummary | { message?: string; error?: string } = await res.json();
 
       if ('error' in data && data.error) {
-        setMessage(data.error);
+        toast.error(data.error);
       } else if ('message' in data && data.message) {
-        setMessage(data.message);
+        toast.success(data.message);
       } else if ('processed' in data) {
-        setMessage(
+        toast.success(
           `${label}: ${data.processed} procesadas, ${data.errors} con error. Restantes: ${data.remaining}`
         );
       } else {
-        setMessage('Accion enviada.');
+        toast.success('Acción enviada exitosamente');
       }
 
       await loadStatus();
       onRefresh?.();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Error desconocido';
-      setMessage(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -86,8 +85,8 @@ export default function ScraperControls({ onRefresh, totals }: Props) {
           <div className="flex items-center gap-2">
             <p className="text-xs uppercase tracking-[0.2em] text-white/60">Paso 2</p>
             {isPolling && (
-              <span className="flex items-center gap-1 text-xs text-emerald-400">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span className="flex items-center gap-1 text-xs text-[#16DB93]">
+                <span className="h-2 w-2 rounded-full bg-[#16DB93] animate-pulse"></span>
                 Actualizando
               </span>
             )}
@@ -106,8 +105,8 @@ export default function ScraperControls({ onRefresh, totals }: Props) {
           )}
           className={`btn ${
             config.scrapingActivo
-              ? 'bg-rose-500/80 text-white hover:bg-rose-500'
-              : 'bg-emerald-500 text-white hover:bg-emerald-400'
+              ? 'bg-[#DB2B39]/80 text-white hover:bg-[#DB2B39]'
+              : 'bg-[#16DB93] text-white hover:bg-[#16DB93]'
           }`}
           disabled={loading}
         >
@@ -127,7 +126,6 @@ export default function ScraperControls({ onRefresh, totals }: Props) {
         <span className="rounded-full bg-white/10 px-3 py-1">Completadas: {totals.done}</span>
         <span className="rounded-full bg-white/10 px-3 py-1">Errores: {totals.error}</span>
       </div>
-      {message && <p className="text-xs text-emerald-300 bg-emerald-500/10 px-3 py-2 rounded-lg">{message}</p>}
       {config.ultimaEjecucion && (
         <p className="text-xs text-white/50">
           Última ejecución: {new Date(config.ultimaEjecucion).toLocaleString()}

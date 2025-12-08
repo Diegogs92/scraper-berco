@@ -66,7 +66,7 @@ export default function OnboardingGuide({ forceShow, onClose }: Props = {}) {
         </button>
 
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-sky-500 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-[#16DB93] to-[#598392] mb-4">
             <CheckCircle className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">¡Bienvenido al Scraper!</h2>
@@ -102,7 +102,7 @@ export default function OnboardingGuide({ forceShow, onClose }: Props = {}) {
         <div className="flex gap-3">
           <button
             onClick={handleClose}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-emerald-500 to-sky-600 text-white font-semibold rounded-xl hover:from-emerald-600 hover:to-sky-700 transition-all duration-200 shadow-lg shadow-emerald-500/20"
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-[#16DB93] to-[#598392] text-white font-semibold rounded-xl hover:from-[#16DB93] hover:to-sky-700 transition-all duration-200 shadow-lg shadow-[#16DB93]/20"
           >
             ¡Entendido, empecemos!
           </button>

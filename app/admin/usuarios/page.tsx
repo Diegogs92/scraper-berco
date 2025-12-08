@@ -33,8 +33,8 @@ function AdminUsuariosContent() {
 
   const roleColors = {
     desarrollador: 'text-purple-400 bg-purple-500/10 border-purple-500/30',
-    administrador: 'text-emerald-400 bg-emerald-500/10 border-emerald-500/30',
-    consultante: 'text-sky-400 bg-sky-500/10 border-sky-500/30',
+    administrador: 'text-[#16DB93] bg-[#16DB93]/10 border-[#16DB93]/30',
+    consultante: 'text-[#598392] bg-[#598392]/10 border-[#598392]/30',
   };
 
   const roleIcons = {
@@ -217,13 +217,13 @@ function AdminUsuariosContent() {
           </div>
 
       {success && (
-        <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-200 px-4 py-3 rounded-lg">
+        <div className="bg-[#16DB93]/10 border border-[#16DB93]/30 text-emerald-200 px-4 py-3 rounded-lg">
           {success}
         </div>
       )}
 
       {error && (
-        <div className="bg-rose-500/10 border border-rose-500/30 text-rose-200 px-4 py-3 rounded-lg">
+        <div className="bg-[#DB2B39]/10 border border-[#DB2B39]/30 text-rose-200 px-4 py-3 rounded-lg">
           {error}
         </div>
       )}
@@ -234,7 +234,7 @@ function AdminUsuariosContent() {
           {currentUser?.rol !== 'consultante' && (
             <button
               onClick={() => setShowRegisterModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-[#16DB93] hover:bg-[#16DB93] text-white rounded-lg transition-colors"
             >
               <UserPlus className="h-5 w-5" />
               Registrar Usuario
@@ -266,7 +266,7 @@ function AdminUsuariosContent() {
                     <tr key={user.id} className="border-b border-white/5 hover:bg-white/5">
                       <td className="py-3 px-4 text-white">
                         {user.nombre}
-                        {isCurrentUser && <span className="ml-2 text-xs text-emerald-400">(Tú)</span>}
+                        {isCurrentUser && <span className="ml-2 text-xs text-[#16DB93]">(Tú)</span>}
                       </td>
                       <td className="py-3 px-4 text-white/80">{user.email}</td>
                       <td className="py-3 px-4">
@@ -284,7 +284,7 @@ function AdminUsuariosContent() {
                             <>
                               <button
                                 onClick={() => openEditModal(user)}
-                                className="p-2 bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 rounded-lg transition-colors"
+                                className="p-2 bg-[#598392]/10 text-[#598392] hover:bg-[#598392]/20 rounded-lg transition-colors"
                                 title="Editar usuario"
                               >
                                 <Pencil className="h-4 w-4" />
@@ -292,7 +292,7 @@ function AdminUsuariosContent() {
                               {!isCurrentUser && (
                                 <button
                                   onClick={() => setShowDeleteConfirm({ id: user.id, nombre: user.nombre })}
-                                  className="p-2 bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 rounded-lg transition-colors"
+                                  className="p-2 bg-[#DB2B39]/10 text-[#DB2B39] hover:bg-[#DB2B39]/20 rounded-lg transition-colors"
                                   title="Eliminar usuario"
                                 >
                                   <Trash2 className="h-4 w-4" />
@@ -325,7 +325,7 @@ function AdminUsuariosContent() {
                   value={registerData.nombre}
                   onChange={(e) => setRegisterData({ ...registerData, nombre: e.target.value })}
                   required
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#16DB93]/50"
                   placeholder="Nombre completo"
                   disabled={actionLoading}
                 />
@@ -338,7 +338,7 @@ function AdminUsuariosContent() {
                   value={registerData.email}
                   onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
                   required
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#16DB93]/50"
                   placeholder="email@ejemplo.com"
                   disabled={actionLoading}
                 />
@@ -352,7 +352,7 @@ function AdminUsuariosContent() {
                   onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
                   required
                   minLength={6}
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#16DB93]/50"
                   placeholder="Mínimo 6 caracteres"
                   disabled={actionLoading}
                 />
@@ -363,7 +363,7 @@ function AdminUsuariosContent() {
                 <select
                   value={registerData.rol}
                   onChange={(e) => setRegisterData({ ...registerData, rol: e.target.value as UserRole })}
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#16DB93]/50"
                   disabled={actionLoading}
                 >
                   <option value="consultante">Consultante</option>
@@ -388,7 +388,7 @@ function AdminUsuariosContent() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2 bg-[#16DB93] hover:bg-[#16DB93] text-white rounded-lg transition-colors flex items-center justify-center gap-2"
                   disabled={actionLoading}
                 >
                   {actionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Registrar'}
@@ -413,7 +413,7 @@ function AdminUsuariosContent() {
                   value={editData.nombre}
                   onChange={(e) => setEditData({ ...editData, nombre: e.target.value })}
                   required
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#598392]/50"
                   placeholder="Nombre completo"
                   disabled={actionLoading}
                 />
@@ -426,7 +426,7 @@ function AdminUsuariosContent() {
                   value={editData.email}
                   onChange={(e) => setEditData({ ...editData, email: e.target.value })}
                   required
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#598392]/50"
                   placeholder="email@ejemplo.com"
                   disabled={actionLoading}
                 />
@@ -441,7 +441,7 @@ function AdminUsuariosContent() {
                   value={editData.password}
                   onChange={(e) => setEditData({ ...editData, password: e.target.value })}
                   minLength={6}
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#598392]/50"
                   placeholder="Mínimo 6 caracteres"
                   disabled={actionLoading}
                 />
@@ -452,7 +452,7 @@ function AdminUsuariosContent() {
                 <select
                   value={editData.rol}
                   onChange={(e) => setEditData({ ...editData, rol: e.target.value as UserRole })}
-                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#598392]/50"
                   disabled={actionLoading}
                 >
                   <option value="consultante">Consultante</option>
@@ -478,7 +478,7 @@ function AdminUsuariosContent() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2 bg-[#598392] hover:bg-[#598392] text-white rounded-lg transition-colors flex items-center justify-center gap-2"
                   disabled={actionLoading}
                 >
                   {actionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Guardar Cambios'}
@@ -494,8 +494,8 @@ function AdminUsuariosContent() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="card w-full max-w-md p-6">
             <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center mb-4">
-                <Trash2 className="h-6 w-6 text-rose-400" />
+              <div className="w-12 h-12 rounded-full bg-[#DB2B39]/20 flex items-center justify-center mb-4">
+                <Trash2 className="h-6 w-6 text-[#DB2B39]" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">¿Eliminar Usuario?</h3>
               <p className="text-sm text-white/70 mb-4">
@@ -514,7 +514,7 @@ function AdminUsuariosContent() {
                 </button>
                 <button
                   onClick={handleDelete}
-                  className="flex-1 btn bg-rose-500 text-white hover:bg-rose-600 flex items-center justify-center gap-2"
+                  className="flex-1 btn bg-[#DB2B39] text-white hover:bg-[#DB2B39] flex items-center justify-center gap-2"
                   disabled={actionLoading}
                 >
                   {actionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Eliminar'}

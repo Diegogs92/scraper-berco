@@ -56,7 +56,7 @@ export default function PriceAlertsBadge({ onSelect }: Props) {
       >
         <Bell className="h-5 w-5" />
         {unread.length > 0 && (
-          <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full bg-rose-500 text-[10px] font-semibold flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 h-4 min-w-[16px] px-1 rounded-full bg-[#DB2B39] text-[10px] font-semibold flex items-center justify-center">
             {unread.length}
           </span>
         )}
@@ -72,7 +72,7 @@ export default function PriceAlertsBadge({ onSelect }: Props) {
             <div className="flex items-center gap-2">
               <button
                 onClick={markAllRead}
-                className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
+                className="text-xs text-[#16DB93] hover:text-[#16DB93] flex items-center gap-1"
               >
                 <Check className="h-3 w-3" />
                 Marcar leídas
@@ -115,9 +115,9 @@ export default function PriceAlertsBadge({ onSelect }: Props) {
                       </div>
                       <div className="flex items-center gap-2">
                         {isUp ? (
-                          <ArrowUpRight className="h-4 w-4 text-rose-400" />
+                          <ArrowUpRight className="h-4 w-4 text-[#DB2B39]" />
                         ) : (
-                          <ArrowDownRight className="h-4 w-4 text-emerald-400" />
+                          <ArrowDownRight className="h-4 w-4 text-[#16DB93]" />
                         )}
                         <div className="text-right">
                           <div className="text-sm font-semibold text-white">

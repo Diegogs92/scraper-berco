@@ -33,16 +33,16 @@ export default function ScrapingProgress({ totals, isActive }: Props) {
 
   return (
     <div className="fixed bottom-6 right-6 z-50 animate-slide-up">
-      <div className="card w-80 p-4 shadow-2xl border-2 border-emerald-500/30">
+      <div className="card w-80 p-4 shadow-2xl border-2 border-[#16DB93]/30">
         <div className="flex items-start gap-3">
           <div className="flex-shrink-0">
             {isComplete ? (
-              <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-emerald-400" />
+              <div className="w-10 h-10 rounded-full bg-[#16DB93]/20 flex items-center justify-center">
+                <CheckCircle2 className="h-6 w-6 text-[#16DB93]" />
               </div>
             ) : (
-              <div className="w-10 h-10 rounded-full bg-sky-500/20 flex items-center justify-center">
-                <Loader2 className="h-6 w-6 text-sky-400 animate-spin" />
+              <div className="w-10 h-10 rounded-full bg-[#598392]/20 flex items-center justify-center">
+                <Loader2 className="h-6 w-6 text-[#598392] animate-spin" />
               </div>
             )}
           </div>
@@ -64,7 +64,7 @@ export default function ScrapingProgress({ totals, isActive }: Props) {
               {/* Progress bar */}
               <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-emerald-500 to-sky-500 rounded-full transition-all duration-500 ease-out"
+                  className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#16DB93] to-[#598392] rounded-full transition-all duration-500 ease-out"
                   style={{ width: `${progress}%` }}
                 >
                   <div className="absolute inset-0 bg-white/30 animate-shimmer"></div>
@@ -76,7 +76,7 @@ export default function ScrapingProgress({ totals, isActive }: Props) {
                 <span className="text-white/70">
                   {processed} / {total} URLs
                 </span>
-                <span className="font-semibold text-emerald-400">
+                <span className="font-semibold text-[#16DB93]">
                   {Math.round(progress)}%
                 </span>
               </div>
@@ -84,19 +84,19 @@ export default function ScrapingProgress({ totals, isActive }: Props) {
               {/* Detailed counts */}
               <div className="flex flex-wrap gap-2 text-xs pt-1">
                 {totals.processing > 0 && (
-                  <div className="flex items-center gap-1 text-sky-400">
+                  <div className="flex items-center gap-1 text-[#598392]">
                     <Zap className="h-3 w-3" />
                     <span>{totals.processing} en curso</span>
                   </div>
                 )}
                 {totals.done > 0 && (
-                  <div className="flex items-center gap-1 text-emerald-400">
+                  <div className="flex items-center gap-1 text-[#16DB93]">
                     <CheckCircle2 className="h-3 w-3" />
                     <span>{totals.done} exitosas</span>
                   </div>
                 )}
                 {totals.error > 0 && (
-                  <div className="flex items-center gap-1 text-rose-400">
+                  <div className="flex items-center gap-1 text-[#DB2B39]">
                     <XCircle className="h-3 w-3" />
                     <span>{totals.error} errores</span>
                   </div>

@@ -76,10 +76,10 @@ export default function ComparisonModal({ products, onClose }: Props) {
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-6 py-6 border-b border-white/5">
-            <div className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border border-emerald-500/20 rounded-xl p-4">
+            <div className="bg-gradient-to-br from-[#16DB93]/10 to-[#16DB93]/5 border border-[#16DB93]/20 rounded-xl p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                  <Package className="h-5 w-5 text-emerald-400" />
+                <div className="w-10 h-10 rounded-lg bg-[#16DB93]/20 flex items-center justify-center">
+                  <Package className="h-5 w-5 text-[#16DB93]" />
                 </div>
                 <div>
                   <p className="text-xs text-emerald-200/60 uppercase tracking-wider">Productos</p>
@@ -114,10 +114,10 @@ export default function ComparisonModal({ products, onClose }: Props) {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-amber-500/10 to-amber-600/5 border border-amber-500/20 rounded-xl p-4">
+            <div className="bg-gradient-to-br from-[#598392]/10 to-amber-600/5 border border-[#598392]/20 rounded-xl p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center">
-                  <TrendingDown className="h-5 w-5 text-amber-400" />
+                <div className="w-10 h-10 rounded-lg bg-[#598392]/20 flex items-center justify-center">
+                  <TrendingDown className="h-5 w-5 text-[#598392]" />
                 </div>
                 <div>
                   <p className="text-xs text-amber-200/60 uppercase tracking-wider">Ahorro Total</p>
@@ -146,7 +146,7 @@ export default function ComparisonModal({ products, onClose }: Props) {
                       {group.diferencia > 0 && (
                         <>
                           <span>•</span>
-                          <span className="text-emerald-400 font-medium">
+                          <span className="text-[#16DB93] font-medium">
                             Ahorra ${formatPrice(group.diferencia)}
                           </span>
                         </>
@@ -162,7 +162,7 @@ export default function ComparisonModal({ products, onClose }: Props) {
                       key={item.id || item.url}
                       className={`px-4 py-3 flex items-center justify-between hover:bg-white/5 transition-colors ${
                         itemIdx === 0 && group.hasMultipleProviders
-                          ? 'bg-emerald-500/5'
+                          ? 'bg-[#16DB93]/5'
                           : ''
                       }`}
                     >
@@ -170,14 +170,14 @@ export default function ComparisonModal({ products, onClose }: Props) {
                         <div className="flex items-center gap-2">
                           <span className="font-medium text-white">{item.proveedor}</span>
                           {itemIdx === 0 && group.hasMultipleProviders && (
-                            <span className="px-2 py-0.5 text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-full font-medium">
+                            <span className="px-2 py-0.5 text-xs bg-[#16DB93]/20 text-[#16DB93] border border-[#16DB93]/30 rounded-full font-medium">
                               Mejor precio
                             </span>
                           )}
                         </div>
                         <div className="flex items-center gap-2 mt-1">
                           {item.descuento && (
-                            <span className="text-xs text-emerald-400 font-medium">
+                            <span className="text-xs text-[#16DB93] font-medium">
                               {item.descuento}
                             </span>
                           )}
@@ -196,7 +196,7 @@ export default function ComparisonModal({ products, onClose }: Props) {
                             ${formatPrice(item.precio)}
                           </div>
                           {itemIdx > 0 && group.hasMultipleProviders && (
-                            <div className="text-xs text-rose-400 font-medium">
+                            <div className="text-xs text-[#DB2B39] font-medium">
                               +${formatPrice(item.precio - group.minPrecio)} más caro
                             </div>
                           )}
@@ -205,7 +205,7 @@ export default function ComparisonModal({ products, onClose }: Props) {
                           href={item.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-3 py-2 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 text-sm font-medium rounded-lg border border-emerald-500/30 transition-colors"
+                          className="px-3 py-2 bg-[#16DB93]/10 hover:bg-[#16DB93]/20 text-[#16DB93] text-sm font-medium rounded-lg border border-[#16DB93]/30 transition-colors"
                         >
                           Ver
                         </a>

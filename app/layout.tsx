@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { AuthProvider } from '@/contexts/AuthContext';
+import ToastProvider from '@/components/ToastProvider';
 import { activeFont } from '@/lib/fonts';
 
 export const metadata: Metadata = {
@@ -14,7 +15,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es">
       <body className={`${activeFont.className} antialiased`}>
         <ThemeProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {children}
+            <ToastProvider />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

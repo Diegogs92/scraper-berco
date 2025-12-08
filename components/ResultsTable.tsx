@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { FileDown, Loader2, Search, ChevronLeft, ChevronRight, X, CheckCircle2, XCircle, BarChart3 } from 'lucide-react';
+import { FileDown, Loader2, Search, ChevronLeft, ChevronRight, X, CheckCircle2, XCircle, BarChart3, FileText, Play } from 'lucide-react';
 import { ResultFilter, ScrapeResult } from '@/types';
 import ComparisonModal from './ComparisonModal';
+import EmptyState from './EmptyState';
+import Badge from './Badge';
 
 type Props = {
   onRefresh?: () => void;
@@ -106,7 +108,7 @@ export default function ResultsTable({ onRefresh }: Props) {
         {totalCount > 0 && (
           <a
             href="/api/resultados?format=csv"
-            className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
+            className="text-xs text-[#16DB93] hover:text-[#16DB93] flex items-center gap-1"
           >
             <FileDown className="h-3 w-3" />
             Exportar CSV
@@ -118,7 +120,7 @@ export default function ResultsTable({ onRefresh }: Props) {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
           <input
-            className="w-full rounded-lg border border-white/10 bg-black/30 py-2 pl-10 pr-10 text-sm text-white outline-none focus:border-emerald-400"
+            className="w-full rounded-lg border border-white/10 bg-black/30 py-2 pl-10 pr-10 text-sm text-white outline-none focus:border-[#16DB93]"
             placeholder="Buscar productos..."
             value={filters.search || ''}
             onChange={(e) => updateFilter('search', e.target.value)}
@@ -133,7 +135,7 @@ export default function ResultsTable({ onRefresh }: Props) {
           )}
         </div>
         <select
-          className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+          className="rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-[#16DB93]"
           value={filters.status || ''}
           onChange={(e) => updateFilter('status', e.target.value)}
         >
@@ -146,7 +148,7 @@ export default function ResultsTable({ onRefresh }: Props) {
       {hasActiveFilters && (
         <button
           onClick={clearFilters}
-          className="text-xs text-emerald-400 hover:text-emerald-300 self-start"
+          className="text-xs text-[#16DB93] hover:text-[#16DB93] self-start"
         >
           Limpiar filtros
         </button>
@@ -155,7 +157,7 @@ export default function ResultsTable({ onRefresh }: Props) {
       {selectedIds.size > 0 && (
         <button
           onClick={() => setShowComparison(true)}
-          className="btn bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 flex items-center gap-2"
+          className="btn bg-gradient-to-r from-[#16DB93] to-teal-500 text-white hover:from-[#16DB93] hover:to-teal-600 flex items-center gap-2"
         >
           <BarChart3 className="h-4 w-4" />
           Comparar {selectedIds.size} {selectedIds.size === 1 ? 'Producto' : 'Productos'}
@@ -171,7 +173,7 @@ export default function ResultsTable({ onRefresh }: Props) {
                   type="checkbox"
                   checked={results.length > 0 && selectedIds.size === results.length}
                   onChange={toggleSelectAll}
-                  className="w-4 h-4 rounded border-white/20 bg-white/10 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0 cursor-pointer"
+                  className="w-4 h-4 rounded border-white/20 bg-white/10 text-[#16DB93] focus:ring-[#16DB93] focus:ring-offset-0 cursor-pointer"
                 />
               </th>
               <th className="px-4 py-2">Producto</th>
@@ -193,10 +195,28 @@ export default function ResultsTable({ onRefresh }: Props) {
               </tr>
             ) : results.length === 0 ? (
               <tr>
-                <td className="px-4 py-6 text-center text-white/60" colSpan={8}>
-                  {hasActiveFilters
-                    ? 'No se encontraron resultados con esos filtros.'
-                    : 'Sin resultados. Ejecuta un scraping para ver datos.'}
+                <td className="px-4 py-0" colSpan={8}>
+                  <EmptyState
+                    icon={hasActiveFilters ? Search : FileText}
+                    title={hasActiveFilters ? 'No se encontraron resultados' : 'No hay resultados aún'}
+                    description={
+                      hasActiveFilters
+                        ? 'Intenta ajustar o limpiar los filtros para ver más resultados'
+                        : 'Agrega URLs y ejecuta el scraper para ver productos y precios'
+                    }
+                    action={
+                      !hasActiveFilters ? (
+                        <button
+                          onClick={() => {/* Navigate to URLs section */}}
+                          className="btn bg-[#16DB93] text-white hover:bg-[#16DB93] flex items-center gap-2"
+                        >
+                          <Play className="h-4 w-4" />
+                          Ir a agregar URLs
+                        </button>
+                      ) : undefined
+                    }
+                    helpText={hasActiveFilters ? undefined : 'Los resultados aparecerán aquí después del scraping'}
+                  />
                 </td>
               </tr>
             ) : (
@@ -210,17 +230,17 @@ export default function ResultsTable({ onRefresh }: Props) {
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleSelection(rowId)}
-                        className="w-4 h-4 rounded border-white/20 bg-white/10 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-0 cursor-pointer"
+                        className="w-4 h-4 rounded border-white/20 bg-white/10 text-[#16DB93] focus:ring-[#16DB93] focus:ring-offset-0 cursor-pointer"
                       />
                     </td>
                     <td className="px-4 py-3">
                     <div className="font-medium text-white">{r.nombre || 'Sin nombre'}</div>
-                    {r.error && <div className="text-xs text-amber-300 mt-1">{r.error}</div>}
+                    {r.error && <div className="text-xs text-[#598392] mt-1">{r.error}</div>}
                     <a
                       href={r.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-emerald-400 hover:underline mt-1 inline-block"
+                      className="text-xs text-[#16DB93] hover:underline mt-1 inline-block"
                     >
                       Ver producto
                     </a>
@@ -230,7 +250,7 @@ export default function ResultsTable({ onRefresh }: Props) {
                   </td>
                   <td className="px-4 py-3">
                     {r.descuento ? (
-                      <span className="text-emerald-300 font-medium">{r.descuento}</span>
+                      <span className="text-[#16DB93] font-medium">{r.descuento}</span>
                     ) : (
                       <span className="text-white/40">-</span>
                     )}
@@ -239,9 +259,13 @@ export default function ResultsTable({ onRefresh }: Props) {
                   <td className="px-4 py-3 text-white/70">{r.categoria || '-'}</td>
                   <td className="px-4 py-3">
                     {r.status === 'success' ? (
-                      <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                      <Badge variant="success" icon={CheckCircle2}>
+                        Exitoso
+                      </Badge>
                     ) : (
-                      <XCircle className="h-5 w-5 text-rose-400" />
+                      <Badge variant="error" icon={XCircle}>
+                        Error
+                      </Badge>
                     )}
                   </td>
                   <td className="px-4 py-3 text-xs text-white/60 whitespace-nowrap">

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Link2, FileText, Menu, X } from 'lucide-react';
+import { Link2, FileText, TrendingUp, Menu, X } from 'lucide-react';
 import Logo from './Logo';
 import ThemeToggle from './ThemeToggle';
 import UserMenu from './UserMenu';
@@ -18,9 +18,9 @@ export default function Navbar({ activeSection, onSectionChange }: Props) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'urls' as NavSection, label: 'Agregar URLs', icon: Link2 },
+    { id: 'urls' as NavSection, label: 'URLs', icon: Link2 },
     { id: 'resultados' as NavSection, label: 'Resultados', icon: FileText },
-    { id: 'evolucion' as NavSection, label: 'Evolución', icon: FileText },
+    { id: 'evolucion' as NavSection, label: 'Evolución', icon: TrendingUp },
   ];
 
   return (
@@ -49,7 +49,7 @@ export default function Navbar({ activeSection, onSectionChange }: Props) {
                   onClick={() => onSectionChange(item.id)}
                   className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-emerald-500 to-sky-600 text-white shadow-lg shadow-emerald-500/20'
+                      ? 'bg-gradient-to-r from-[#16DB93] to-[#598392] text-white shadow-lg shadow-[#16DB93]/20'
                       : 'text-white/70 hover:text-white hover:bg-white/10'
                   }`}
                 >
@@ -97,7 +97,7 @@ export default function Navbar({ activeSection, onSectionChange }: Props) {
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
                     isActive
-                      ? 'bg-gradient-to-r from-emerald-500 to-sky-600 text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-[#16DB93] to-[#598392] text-white shadow-lg'
                       : 'text-white/70 hover:text-white hover:bg-white/10'
                   }`}
                 >

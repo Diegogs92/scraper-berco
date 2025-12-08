@@ -3,12 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --surface: #0f172a;
-  --card: #111827;
-  --card-muted: #1f2937;
-  --accent: #10b981;
-  --accent-strong: #0ea5e9;
-  --foreground: #e5e7eb;
+  --surface: #29335C;
+  --card: #29335C;
+  --card-muted: #598392;
+  --accent: #16DB93;
+  --accent-strong: #598392;
+  --error: #DB2B39;
+  --foreground: #EEEEFF;
 }
 
 * {
@@ -16,36 +17,57 @@
 }
 
 .theme-dark body {
-  background: radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.08), transparent 35%),
-    radial-gradient(circle at 80% 0%, rgba(16, 185, 129, 0.08), transparent 30%),
+  background: radial-gradient(circle at 20% 20%, rgba(89, 131, 146, 0.15), transparent 35%),
+    radial-gradient(circle at 80% 0%, rgba(22, 219, 147, 0.10), transparent 30%),
     var(--surface);
   color: var(--foreground);
   min-height: 100vh;
 }
 
 .theme-light {
-  --surface: #f8fafc;
+  --surface: #EEEEFF;
   --card: #ffffff;
-  --card-muted: #e2e8f0;
-  --accent: #059669;
-  --accent-strong: #0284c7;
-  --foreground: #0f172a;
+  --card-muted: #598392;
+  --accent: #16DB93;
+  --accent-strong: #598392;
+  --error: #DB2B39;
+  --foreground: #29335C;
 }
 
 .theme-light body {
-  background: radial-gradient(circle at 20% 20%, rgba(2, 132, 199, 0.08), transparent 35%),
-    radial-gradient(circle at 80% 0%, rgba(5, 150, 105, 0.08), transparent 30%),
+  background: radial-gradient(circle at 20% 20%, rgba(89, 131, 146, 0.10), transparent 35%),
+    radial-gradient(circle at 80% 0%, rgba(22, 219, 147, 0.08), transparent 30%),
     var(--surface);
   color: var(--foreground);
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border border-white/5 bg-[rgba(255,255,255,0.03)] shadow-xl shadow-black/30 backdrop-blur transition-all duration-300;
+    @apply rounded-2xl border border-white/10 bg-[rgba(255,255,255,0.08)] shadow-xl shadow-black/30 backdrop-blur transition-all duration-300;
   }
 
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-all duration-200;
+  }
+
+  .badge-success {
+    @apply badge bg-[#16DB93]/20 text-[#16DB93] border border-[#16DB93]/30;
+  }
+
+  .badge-error {
+    @apply badge bg-[#DB2B39]/20 text-[#DB2B39] border border-[#DB2B39]/30;
+  }
+
+  .badge-warning {
+    @apply badge bg-[#598392]/20 text-[#598392] border border-[#598392]/30;
+  }
+
+  .badge-info {
+    @apply badge bg-[#598392]/20 text-[#598392] border border-[#598392]/30;
   }
 }
 

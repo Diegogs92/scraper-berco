@@ -73,7 +73,7 @@ export default function PriceComparison() {
         </div>
         <button
           onClick={loadComparisons}
-          className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
+          className="text-xs text-[#16DB93] hover:text-[#16DB93] flex items-center gap-1"
           disabled={loading}
         >
           {loading ? <Loader2 className="h-3 w-3 animate-spin" /> : <ArrowUpDown className="h-3 w-3" />}
@@ -113,7 +113,7 @@ export default function PriceComparison() {
                 </div>
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <div className="flex items-center gap-1 text-emerald-400 font-semibold text-sm">
+                    <div className="flex items-center gap-1 text-[#16DB93] font-semibold text-sm">
                       <TrendingDown className="h-4 w-4" />
                       {comp.diferenciaPorcentaje}%
                     </div>
@@ -137,7 +137,7 @@ export default function PriceComparison() {
                         key={item.id}
                         className={`flex items-center justify-between p-3 rounded-lg ${
                           idx === 0
-                            ? 'bg-emerald-500/10 border border-emerald-500/30'
+                            ? 'bg-[#16DB93]/10 border border-[#16DB93]/30'
                             : 'bg-white/5'
                         }`}
                       >
@@ -145,13 +145,13 @@ export default function PriceComparison() {
                           <div className="flex items-center gap-2">
                             <span className="text-sm font-medium text-white">{item.proveedor}</span>
                             {idx === 0 && (
-                              <span className="px-2 py-0.5 text-xs bg-emerald-500/30 text-emerald-100 rounded-full">
+                              <span className="px-2 py-0.5 text-xs bg-[#16DB93]/30 text-emerald-100 rounded-full">
                                 Mejor precio
                               </span>
                             )}
                           </div>
                           {item.descuento && (
-                            <span className="text-xs text-emerald-300 mt-1 inline-block">
+                            <span className="text-xs text-[#16DB93] mt-1 inline-block">
                               {item.descuento}
                             </span>
                           )}
@@ -164,7 +164,7 @@ export default function PriceComparison() {
                             href={item.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-emerald-400 hover:text-emerald-300"
+                            className="text-[#16DB93] hover:text-[#16DB93]"
                             title="Ver producto"
                           >
                             <ExternalLink className="h-4 w-4" />

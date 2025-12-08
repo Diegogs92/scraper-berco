@@ -13,8 +13,8 @@ export default function UserMenu() {
 
   const roleColors = {
     desarrollador: 'text-purple-400',
-    administrador: 'text-emerald-400',
-    consultante: 'text-sky-400',
+    administrador: 'text-[#16DB93]',
+    consultante: 'text-[#598392]',
   };
 
   const roleIcons = {
@@ -42,7 +42,7 @@ export default function UserMenu() {
         <>
           <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
           <div className="absolute right-0 mt-2 w-64 bg-slate-800 border border-white/20 rounded-2xl shadow-2xl z-50 overflow-hidden">
-            <div className="p-4 bg-gradient-to-br from-emerald-500/20 to-sky-500/20 border-b border-white/10">
+            <div className="p-4 bg-gradient-to-br from-[#16DB93]/20 to-[#598392]/20 border-b border-white/10">
               <p className="text-sm font-semibold text-white">{user.nombre}</p>
               <p className="text-xs text-white/80 mt-0.5">{user.email}</p>
               <div className={`inline-flex items-center gap-1.5 mt-2 px-2 py-1 rounded-full text-xs font-medium ${roleColors[user.rol]} bg-white/20`}>
@@ -55,10 +55,10 @@ export default function UserMenu() {
               {hasPermission('administrador') && (
                 <Link
                   href="/admin/usuarios"
-                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-white hover:bg-emerald-500/20 transition-all duration-200"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-white hover:bg-[#16DB93]/20 transition-all duration-200"
                   onClick={() => setIsOpen(false)}
                 >
-                  <Settings className="h-4 w-4 text-emerald-400" />
+                  <Settings className="h-4 w-4 text-[#16DB93]" />
                   <span>Administrar usuarios</span>
                 </Link>
               )}
@@ -66,10 +66,10 @@ export default function UserMenu() {
               {user.rol === 'desarrollador' && (
                 <Link
                   href="/admin/limpiar"
-                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-white hover:bg-amber-500/20 transition-all duration-200"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-white hover:bg-[#598392]/20 transition-all duration-200"
                   onClick={() => setIsOpen(false)}
                 >
-                  <Trash2 className="h-4 w-4 text-amber-400" />
+                  <Trash2 className="h-4 w-4 text-[#598392]" />
                   <span>Limpiar sistema</span>
                 </Link>
               )}
@@ -81,7 +81,7 @@ export default function UserMenu() {
                   setIsOpen(false);
                   logout();
                 }}
-                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-rose-300 hover:bg-rose-500/20 transition-all duration-200"
+                className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-[#DB2B39] hover:bg-[#DB2B39]/20 transition-all duration-200"
               >
                 <LogOut className="h-4 w-4" />
                 <span>Cerrar sesión</span>

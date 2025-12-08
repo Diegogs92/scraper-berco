@@ -99,7 +99,7 @@ export default function PriceEvolution() {
         </div>
         <button
           onClick={loadAlerts}
-          className="text-xs text-emerald-400 hover:text-emerald-300"
+          className="text-xs text-[#16DB93] hover:text-[#16DB93]"
           disabled={loading}
         >
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Actualizar'}
@@ -109,7 +109,7 @@ export default function PriceEvolution() {
       <div className="flex flex-col gap-2">
         <label className="text-sm text-white/80">Producto</label>
         <select
-          className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+          className="rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-[#16DB93]"
           value={selected?.id || ''}
           onChange={(e) => {
             const next = alerts.find((a) => a.id === e.target.value);
@@ -143,9 +143,9 @@ export default function PriceEvolution() {
         <>
           <div className="flex items-center gap-3">
             {delta === 0 ? null : delta > 0 ? (
-              <ArrowUpRight className="h-5 w-5 text-rose-400" />
+              <ArrowUpRight className="h-5 w-5 text-[#DB2B39]" />
             ) : (
-              <ArrowDownRight className="h-5 w-5 text-emerald-400" />
+              <ArrowDownRight className="h-5 w-5 text-[#16DB93]" />
             )}
             <div>
               <div className="text-white text-lg font-semibold">

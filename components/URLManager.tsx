@@ -1,5 +1,8 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { Edit3, Loader2, Trash, Upload, Search, ChevronLeft, ChevronRight, X, Plus, CheckCircle2, XCircle, Clock } from 'lucide-react';
+import { Edit3, Loader2, Trash, Upload, Search, ChevronLeft, ChevronRight, X, Plus, CheckCircle2, XCircle, Clock, Link2 } from 'lucide-react';
+import { toast } from 'sonner';
+import EmptyState from './EmptyState';
+import Badge from './Badge';
 import { UrlItem } from '@/types';
 
 type Props = {
@@ -10,7 +13,6 @@ export default function URLManager({ onChange }: Props) {
   const [urls, setUrls] = useState<UrlItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [newUrl, setNewUrl] = useState('');
-  const [message, setMessage] = useState('');
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,7 +31,6 @@ export default function URLManager({ onChange }: Props) {
 
   const loadUrls = useCallback(async () => {
     setLoading(true);
-    setMessage('');
     try {
       const params = new URLSearchParams({
         limit: pageSize.toString(),
@@ -45,7 +46,7 @@ export default function URLManager({ onChange }: Props) {
       setTotalCount(data.total || 0);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Error cargando URLs';
-      setMessage(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -60,11 +61,11 @@ export default function URLManager({ onChange }: Props) {
     if (!newUrl.trim()) return;
 
     setLoading(true);
-    setMessage('');
 
     try {
       // Check if input contains multiple lines (batch import)
       const lines = newUrl.trim().split('\n').filter(line => line.trim());
+      let insertedCount = 0;
 
       if (lines.length > 1) {
         // Batch import
@@ -74,7 +75,8 @@ export default function URLManager({ onChange }: Props) {
           body: JSON.stringify({ csv: newUrl }),
         });
         const data = await res.json();
-        setMessage(`✓ ${data.inserted || 0} URLs agregadas`);
+        insertedCount = data.inserted || 0;
+        toast.success(`${insertedCount} URLs agregadas exitosamente`);
       } else {
         // Single URL
         const res = await fetch('/api/urls', {
@@ -84,18 +86,38 @@ export default function URLManager({ onChange }: Props) {
         });
         const data = await res.json();
         if (data.error) {
-          setMessage(data.error);
+          toast.error(data.error);
+          setLoading(false);
+          return;
         } else {
-          setMessage('✓ URL agregada');
+          insertedCount = 1;
+          toast.success('URL agregada exitosamente');
         }
       }
 
       setNewUrl('');
       await loadUrls();
       onChange?.();
+
+      // Auto-ejecutar scraper si se agregaron URLs
+      if (insertedCount > 0) {
+        toast.info('Ejecutando scraper automáticamente...');
+        try {
+          const scraperRes = await fetch('/api/scraper/manual', { method: 'POST' });
+          const scraperData = await scraperRes.json();
+          if (scraperData.error) {
+            toast.error(`Error en scraper: ${scraperData.error}`);
+          } else {
+            toast.success('Scraper ejecutado correctamente');
+          }
+          onChange?.();
+        } catch (scraperErr) {
+          toast.error('Error al ejecutar el scraper');
+        }
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Error al agregar';
-      setMessage(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -110,12 +132,13 @@ export default function URLManager({ onChange }: Props) {
     setLoading(true);
     try {
       await fetch(`/api/urls/${deleteConfirm.id}`, { method: 'DELETE' });
+      toast.success('URL eliminada exitosamente');
       await loadUrls();
       onChange?.();
       setDeleteConfirm(null);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'No se pudo eliminar';
-      setMessage(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -147,12 +170,13 @@ export default function URLManager({ onChange }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url: editUrlValue }),
       });
+      toast.success('URL actualizada exitosamente');
       await loadUrls();
       onChange?.();
       closeEditModal();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'No se pudo editar';
-      setMessage(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -164,7 +188,6 @@ export default function URLManager({ onChange }: Props) {
     if (!file) return;
 
     setLoading(true);
-    setMessage('');
 
     try {
       const text = await file.text();
@@ -174,12 +197,38 @@ export default function URLManager({ onChange }: Props) {
         body: JSON.stringify({ csv: text }),
       });
       const data = await res.json();
-      setMessage(`Importadas: ${data.inserted || 0} de ${data.totalReceived || 0}`);
+      const insertedCount = data.inserted || 0;
+
+      if (insertedCount > 0) {
+        toast.success(`${insertedCount} URLs importadas de ${data.totalReceived} en el archivo`);
+      }
+
+      if (data.duplicates > 0) {
+        toast.warning(`${data.duplicates} URLs ya existían`);
+      }
+
       await loadUrls();
       onChange?.();
+
+      // Auto-ejecutar scraper si se agregaron URLs
+      if (insertedCount > 0) {
+        toast.info('Ejecutando scraper automáticamente...');
+        try {
+          const scraperRes = await fetch('/api/scraper/manual', { method: 'POST' });
+          const scraperData = await scraperRes.json();
+          if (scraperData.error) {
+            toast.error(`Error en scraper: ${scraperData.error}`);
+          } else {
+            toast.success('Scraper ejecutado correctamente');
+          }
+          onChange?.();
+        } catch (scraperErr) {
+          toast.error('Error al ejecutar el scraper');
+        }
+      }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Error al importar archivo';
-      setMessage(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -210,7 +259,7 @@ export default function URLManager({ onChange }: Props) {
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" />
             <input
-              className="w-full rounded-lg border border-white/10 bg-black/40 py-2.5 pl-10 pr-10 text-sm text-white outline-none focus:border-emerald-400"
+              className="w-full rounded-lg border border-white/10 bg-black/40 py-2.5 pl-10 pr-10 text-sm text-white outline-none focus:border-[#16DB93]"
               placeholder="Busca por URL exacta o parte de ella"
               value={searchTerm}
               onChange={(e) => {
@@ -233,7 +282,7 @@ export default function URLManager({ onChange }: Props) {
         <div className="card bg-white/5 border border-white/10 px-4 py-3">
           <p className="text-xs text-white/50 uppercase tracking-[0.2em] mb-1">Filtrar estado</p>
           <select
-            className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white outline-none focus:border-emerald-400"
+            className="w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2.5 text-sm text-white outline-none focus:border-[#16DB93]"
             value={statusFilter}
             onChange={(e) => {
               setStatusFilter(e.target.value);
@@ -268,7 +317,7 @@ export default function URLManager({ onChange }: Props) {
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1"
+              className="text-xs text-[#16DB93] hover:text-[#16DB93] flex items-center gap-1"
               disabled={loading}
             >
               <Upload className="h-3 w-3" />
@@ -279,14 +328,14 @@ export default function URLManager({ onChange }: Props) {
 
         <form onSubmit={addUrl} className="flex gap-2">
           <input
-            className="flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400 placeholder:text-white/40"
+            className="flex-1 rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-[#16DB93] placeholder:text-white/40"
             placeholder="Agregar una nueva URL para scrapear"
             value={newUrl}
             onChange={(e) => setNewUrl(e.target.value)}
           />
           <button
             type="submit"
-            className="btn bg-emerald-500 text-white hover:bg-emerald-400 px-4 flex items-center gap-2"
+            className="btn bg-[#16DB93] text-white hover:bg-[#16DB93] px-4 flex items-center gap-2"
             disabled={loading}
             title="Agregar URL"
           >
@@ -294,12 +343,6 @@ export default function URLManager({ onChange }: Props) {
             <span className="hidden sm:inline">Agregar</span>
           </button>
         </form>
-
-        {message && (
-          <div className="text-xs text-emerald-300 bg-emerald-500/10 px-3 py-2 rounded-lg">
-            {message}
-          </div>
-        )}
       </div>
 
       <div className="mt-2 flex-1 overflow-auto rounded-lg border border-white/5">
@@ -322,10 +365,28 @@ export default function URLManager({ onChange }: Props) {
               </tr>
             ) : urls.length === 0 ? (
               <tr>
-                <td className="px-3 py-6 text-center text-white/60" colSpan={4}>
-                  {searchTerm || statusFilter
-                    ? 'No se encontraron URLs con esos filtros.'
-                    : 'Aún no hay URLs cargadas.'}
+                <td className="px-3 py-0" colSpan={4}>
+                  <EmptyState
+                    icon={Link2}
+                    title={searchTerm || statusFilter ? 'No se encontraron URLs' : 'Aún no tienes URLs monitoreadas'}
+                    description={
+                      searchTerm || statusFilter
+                        ? 'Intenta ajustar los filtros para ver más resultados'
+                        : 'Agrega tu primera URL de producto para comenzar a rastrear precios'
+                    }
+                    action={
+                      !searchTerm && !statusFilter ? (
+                        <button
+                          onClick={() => document.querySelector<HTMLInputElement>('input[placeholder*="Agregar"]')?.focus()}
+                          className="btn bg-[#16DB93] text-white hover:bg-[#16DB93] flex items-center gap-2"
+                        >
+                          <Plus className="h-4 w-4" />
+                          Agregar primera URL
+                        </button>
+                      ) : undefined
+                    }
+                    helpText="Puedes agregar URLs de MercadoLibre, Amazon y otros proveedores"
+                  />
                 </td>
               </tr>
             ) : (
@@ -337,7 +398,7 @@ export default function URLManager({ onChange }: Props) {
                         href={u.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="line-clamp-2 break-all text-emerald-300 hover:text-emerald-200 underline decoration-emerald-400/60"
+                        className="line-clamp-2 break-all text-[#16DB93] hover:text-emerald-200 underline decoration-[#16DB93]/60"
                       >
                         {u.url}
                       </a>
@@ -345,19 +406,27 @@ export default function URLManager({ onChange }: Props) {
                       <div className="line-clamp-2 break-all text-white">-</div>
                     )}
                     {u.ultimoError && (
-                      <p className="text-xs text-amber-300">Error: {u.ultimoError}</p>
+                      <p className="text-xs text-[#598392]">Error: {u.ultimoError}</p>
                     )}
                   </td>
                   <td className="px-3 py-2 align-top">{u.proveedor}</td>
                   <td className="px-3 py-2 align-top">
                     {u.status === 'done' ? (
-                      <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                      <Badge variant="success" icon={CheckCircle2}>
+                        Completada
+                      </Badge>
                     ) : u.status === 'error' ? (
-                      <XCircle className="h-5 w-5 text-rose-400" />
+                      <Badge variant="error" icon={XCircle}>
+                        Error
+                      </Badge>
                     ) : u.status === 'processing' ? (
-                      <Loader2 className="h-5 w-5 text-sky-400 animate-spin" />
+                      <Badge variant="info" icon={Loader2}>
+                        En proceso
+                      </Badge>
                     ) : (
-                      <Clock className="h-5 w-5 text-amber-400" />
+                      <Badge variant="warning" icon={Clock}>
+                        Pendiente
+                      </Badge>
                     )}
                   </td>
                   <td className="px-3 py-2 text-right">
@@ -370,7 +439,7 @@ export default function URLManager({ onChange }: Props) {
                         <Edit3 className="h-4 w-4" />
                       </button>
                       <button
-                        className="rounded-lg bg-rose-500/30 p-2 text-white hover:bg-rose-500/50"
+                        className="rounded-lg bg-[#DB2B39]/30 p-2 text-white hover:bg-[#DB2B39]/50"
                         onClick={() => confirmDelete(u.id, u.url)}
                         title="Eliminar"
                       >
@@ -434,7 +503,7 @@ export default function URLManager({ onChange }: Props) {
                   type="text"
                   value={editUrlValue}
                   onChange={(e) => setEditUrlValue(e.target.value)}
-                  className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400"
+                  className="w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-[#16DB93]"
                   placeholder="https://ejemplo.com/producto"
                   autoFocus
                   onKeyDown={(e) => {
@@ -456,7 +525,7 @@ export default function URLManager({ onChange }: Props) {
                 </button>
                 <button
                   onClick={saveEditUrl}
-                  className="btn bg-emerald-500 text-white hover:bg-emerald-400"
+                  className="btn bg-[#16DB93] text-white hover:bg-[#16DB93]"
                   disabled={loading || !editUrlValue.trim()}
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Guardar'}
@@ -472,8 +541,8 @@ export default function URLManager({ onChange }: Props) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
           <div className="card w-full max-w-md p-6 mx-4">
             <div className="flex flex-col items-center text-center">
-              <div className="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center mb-4">
-                <Trash className="h-6 w-6 text-rose-400" />
+              <div className="w-12 h-12 rounded-full bg-[#DB2B39]/20 flex items-center justify-center mb-4">
+                <Trash className="h-6 w-6 text-[#DB2B39]" />
               </div>
               <h3 className="text-lg font-semibold text-white mb-2">¿Eliminar URL?</h3>
               <p className="text-sm text-white/70 mb-4">
@@ -484,7 +553,7 @@ export default function URLManager({ onChange }: Props) {
                   href={deleteConfirm.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-white/60 break-all line-clamp-2 underline decoration-emerald-400/60"
+                  className="text-xs text-white/60 break-all line-clamp-2 underline decoration-[#16DB93]/60"
                 >
                   {deleteConfirm.url}
                 </a>
@@ -499,7 +568,7 @@ export default function URLManager({ onChange }: Props) {
                 </button>
                 <button
                   onClick={deleteUrl}
-                  className="flex-1 btn bg-rose-500 text-white hover:bg-rose-600"
+                  className="flex-1 btn bg-[#DB2B39] text-white hover:bg-[#DB2B39]"
                   disabled={loading}
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Eliminar'}

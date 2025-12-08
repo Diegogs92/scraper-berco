@@ -77,20 +77,20 @@ function LimpiarSistemaContent() {
           </div>
 
       {success && (
-        <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-200 px-4 py-3 rounded-lg">
+        <div className="bg-[#16DB93]/10 border border-[#16DB93]/30 text-emerald-200 px-4 py-3 rounded-lg">
           {success}
         </div>
       )}
 
       {error && (
-        <div className="bg-rose-500/10 border border-rose-500/30 text-rose-200 px-4 py-3 rounded-lg">
+        <div className="bg-[#DB2B39]/10 border border-[#DB2B39]/30 text-rose-200 px-4 py-3 rounded-lg">
           {error}
         </div>
       )}
 
-      <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4">
+      <div className="bg-[#598392]/10 border border-[#598392]/30 rounded-lg p-4">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
+          <AlertTriangle className="h-5 w-5 text-[#598392] flex-shrink-0 mt-0.5" />
           <div>
             <p className="text-amber-200 font-semibold">Advertencia</p>
             <p className="text-amber-200/80 text-sm mt-1">
@@ -124,7 +124,7 @@ function LimpiarSistemaContent() {
             <button
               onClick={() => setShowConfirm('urls')}
               disabled={loading}
-              className="px-4 py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 rounded-lg transition-colors disabled:opacity-50 flex-shrink-0"
+              className="px-4 py-2 bg-[#DB2B39]/20 hover:bg-[#DB2B39]/30 text-[#DB2B39] rounded-lg transition-colors disabled:opacity-50 flex-shrink-0"
             >
               Eliminar URLs
             </button>
@@ -153,7 +153,7 @@ function LimpiarSistemaContent() {
             <button
               onClick={() => setShowConfirm('resultados')}
               disabled={loading}
-              className="px-4 py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 rounded-lg transition-colors disabled:opacity-50 flex-shrink-0"
+              className="px-4 py-2 bg-[#DB2B39]/20 hover:bg-[#DB2B39]/30 text-[#DB2B39] rounded-lg transition-colors disabled:opacity-50 flex-shrink-0"
             >
               Eliminar Resultados
             </button>
@@ -161,17 +161,17 @@ function LimpiarSistemaContent() {
         </div>
 
         {/* Limpiar Todo */}
-        <div className="card p-6 border-2 border-rose-500/30">
+        <div className="card p-6 border-2 border-[#DB2B39]/30">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-rose-300 flex items-center gap-2">
+              <h3 className="text-lg font-semibold text-[#DB2B39] flex items-center gap-2">
                 <Trash2 className="h-5 w-5" />
                 Limpiar TODO el sistema
               </h3>
               <p className="text-white/60 text-sm mt-2">
                 Elimina TODAS las URLs y TODOS los resultados. El sistema quedará completamente limpio.
               </p>
-              <p className="text-rose-300 text-xs mt-3 font-semibold">
+              <p className="text-[#DB2B39] text-xs mt-3 font-semibold">
                 ⚠️ Esta es la opción más destructiva. Úsala solo si quieres empezar completamente de
                 cero.
               </p>
@@ -179,7 +179,7 @@ function LimpiarSistemaContent() {
             <button
               onClick={() => setShowConfirm('all')}
               disabled={loading}
-              className="px-4 py-2 bg-rose-600/30 hover:bg-rose-600/40 text-rose-200 rounded-lg transition-colors disabled:opacity-50 flex-shrink-0 font-semibold"
+              className="px-4 py-2 bg-[#DB2B39]/30 hover:bg-[#DB2B39]/40 text-rose-200 rounded-lg transition-colors disabled:opacity-50 flex-shrink-0 font-semibold"
             >
               Limpiar Todo
             </button>
@@ -190,9 +190,9 @@ function LimpiarSistemaContent() {
       {/* Modal de Confirmación */}
       {showConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="card w-full max-w-md p-6 border-2 border-rose-500/30">
+          <div className="card w-full max-w-md p-6 border-2 border-[#DB2B39]/30">
             <div className="flex items-start gap-3 mb-4">
-              <AlertTriangle className="h-6 w-6 text-rose-400 flex-shrink-0" />
+              <AlertTriangle className="h-6 w-6 text-[#DB2B39] flex-shrink-0" />
               <div>
                 <h3 className="text-xl font-semibold text-white">
                   {confirmActions[showConfirm].title}
@@ -214,7 +214,7 @@ function LimpiarSistemaContent() {
               <button
                 onClick={() => handleClear(showConfirm)}
                 disabled={loading}
-                className="flex-1 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-lg transition-colors disabled:opacity-50 font-semibold"
+                className="flex-1 px-4 py-2 bg-[#DB2B39] hover:bg-rose-700 text-white rounded-lg transition-colors disabled:opacity-50 font-semibold"
               >
                 {loading ? 'Eliminando...' : confirmActions[showConfirm].action}
               </button>

@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import ProtectedRoute from '@/components/ProtectedRoute';
-import OnboardingGuide from '@/components/OnboardingGuide';
 import ScrapingProgress from '@/components/ScrapingProgress';
 import Navbar from '@/components/Navbar';
 import URLSection from '@/components/sections/URLSection';
@@ -16,7 +15,6 @@ type NavSection = 'urls' | 'resultados' | 'evolucion';
 
 function DashboardContent() {
   const [totals, setTotals] = useState<ProgressTotals>(emptyTotals);
-  const [showGuide, setShowGuide] = useState(false);
   const [scrapingActive, setScrapingActive] = useState(false);
   const [activeSection, setActiveSection] = useState<NavSection>('urls');
 
@@ -46,7 +44,6 @@ function DashboardContent() {
 
   return (
     <main className="min-h-screen">
-      <OnboardingGuide forceShow={showGuide} onClose={() => setShowGuide(false)} />
       <ScrapingProgress totals={totals} isActive={scrapingActive} />
 
       <div className="mx-auto w-full max-w-[1800px] p-6">

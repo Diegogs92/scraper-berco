@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 import Logo from '@/components/Logo';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -36,11 +37,15 @@ export default function LoginPage() {
       // Guardar token y usuario en el contexto (persiste en localStorage)
       login(data.token, data.user);
 
+      toast.success('¡Bienvenido! Sesión iniciada correctamente');
+
       // Redirigir al dashboard
       router.push('/dashboard');
     } catch (err) {
       console.error('Login error:', err);
-      setError('Error de conexión');
+      const errorMsg = 'Error de conexión';
+      setError(errorMsg);
+      toast.error(errorMsg);
       setLoading(false);
     }
   };
@@ -50,10 +55,10 @@ export default function LoginPage() {
       <div className="card w-full max-w-md p-8">
         <div className="flex flex-col items-center mb-8">
           <div className="relative mb-6">
-            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-sky-500 blur-2xl opacity-20 animate-pulse"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#16DB93] to-[#598392] blur-2xl opacity-20 animate-pulse"></div>
             <Logo className="h-20 w-20 relative" />
           </div>
-          <h1 className="text-3xl font-bold text-white bg-gradient-to-r from-emerald-400 to-sky-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold text-white bg-gradient-to-r from-[#16DB93] to-[#598392] bg-clip-text text-transparent">
             Scraper Berco
           </h1>
           <p className="text-white/60 text-sm mt-2">Inicia sesión para continuar</p>
@@ -61,7 +66,7 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {error && (
-            <div className="bg-rose-500/10 border border-rose-500/30 text-rose-200 px-4 py-3 rounded-lg text-sm flex items-start gap-2">
+            <div className="bg-[#DB2B39]/10 border border-[#DB2B39]/30 text-rose-200 px-4 py-3 rounded-lg text-sm flex items-start gap-2">
               <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
@@ -80,7 +85,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200 group-hover:border-white/20"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#16DB93]/50 focus:border-[#16DB93]/50 transition-all duration-200 group-hover:border-white/20"
                 placeholder="tu@email.com"
                 disabled={loading}
                 autoComplete="email"
@@ -99,7 +104,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all duration-200 group-hover:border-white/20"
+                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[#16DB93]/50 focus:border-[#16DB93]/50 transition-all duration-200 group-hover:border-white/20"
                 placeholder="••••••••"
                 disabled={loading}
                 autoComplete="current-password"
@@ -110,7 +115,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-emerald-500 to-sky-600 text-white font-semibold py-3 px-4 rounded-xl hover:from-emerald-600 hover:to-sky-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 transform hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full bg-gradient-to-r from-[#16DB93] to-[#598392] text-white font-semibold py-3 px-4 rounded-xl hover:from-[#16DB93] hover:to-sky-700 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#16DB93]/20 hover:shadow-xl hover:shadow-[#16DB93]/30 transform hover:scale-[1.02] active:scale-[0.98]"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
@@ -129,7 +134,7 @@ export default function LoginPage() {
         <div className="mt-6 text-center">
           <p className="text-sm text-white/50">
             ¿No tienes cuenta?{' '}
-            <span className="text-emerald-400 font-medium">Contacta al administrador</span>
+            <span className="text-[#16DB93] font-medium">Contacta al administrador</span>
           </p>
         </div>
       </div>
