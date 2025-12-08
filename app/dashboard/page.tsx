@@ -46,7 +46,7 @@ function DashboardContent() {
     <main className="min-h-screen">
       <ScrapingProgress totals={totals} isActive={scrapingActive} />
 
-      <div className="mx-auto w-full max-w-[1800px] p-6">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 py-4">
         <Navbar activeSection={activeSection} onSectionChange={setActiveSection} />
 
         <div className="animate-fade-in">

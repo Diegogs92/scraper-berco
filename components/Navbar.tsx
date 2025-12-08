@@ -24,15 +24,12 @@ export default function Navbar({ activeSection, onSectionChange }: Props) {
   ];
 
   return (
-    <nav className="card sticky top-0 z-40 mb-8">
-      <div className="px-6 py-5">
+    <nav className="sticky top-0 z-40 mb-6 bg-black/50 backdrop-blur-lg border border-white/10 rounded-xl shadow-md">
+      <div className="px-4 py-3 md:px-6 md:py-4">
         <div className="flex items-center justify-between gap-6">
           {/* Logo and Brand */}
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <Logo className="h-10 w-10" />
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#16DB93]/20 to-[#598392]/20 rounded-xl blur-sm -z-10"></div>
-            </div>
+            <Logo className="h-9 w-9" />
             <div>
               <h1 className="text-xl font-bold text-white tracking-tight">Scraper Berco</h1>
               <p className="text-xs text-white/50 hidden sm:block mt-0.5">
