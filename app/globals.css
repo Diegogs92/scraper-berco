@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --surface: #0f172a;
+  --surface: #0b1220;
   --card: #111827;
-  --card-muted: #1f2937;
-  --accent: #0ea5e9;
-  --accent-strong: #14b8a6;
+  --card-muted: #1c2434;
+  --accent: #2563eb;
+  --accent-strong: #0ea5e9;
   --error: #ef4444;
-  --foreground: #e2e8f0;
+  --foreground: #e5e7eb;
 
   --spacing-xs: 0.5rem;
   --spacing-sm: 0.75rem;
@@ -34,9 +34,7 @@
 }
 
 .theme-dark body {
-  background: radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.12), transparent 30%),
-    radial-gradient(circle at 80% 0%, rgba(20, 184, 166, 0.12), transparent 32%),
-    linear-gradient(145deg, #0b1222 0%, #0f172a 40%, #111827 100%);
+  background: linear-gradient(160deg, #0b1220 0%, #0f172a 50%, #111827 100%);
   background-attachment: fixed;
   color: var(--foreground);
   min-height: 100vh;
@@ -46,32 +44,30 @@
 }
 
 .theme-light {
-  --surface: #f8fafc;
+  --surface: #f5f7fb;
   --card: #ffffff;
-  --card-muted: #e2e8f0;
-  --accent: #0ea5e9;
-  --accent-strong: #0f172a;
+  --card-muted: #eef2f7;
+  --accent: #2563eb;
+  --accent-strong: #0b1220;
   --error: #ef4444;
   --foreground: #0f172a;
 
   --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.05);
-  --shadow-md: 0 10px 25px -18px rgba(15, 23, 42, 0.35);
-  --shadow-lg: 0 26px 50px -32px rgba(15, 23, 42, 0.5);
-  --shadow-xl: 0 40px 80px -50px rgba(15, 23, 42, 0.6);
+  --shadow-md: 0 8px 20px -14px rgba(15, 23, 42, 0.25);
+  --shadow-lg: 0 18px 45px -32px rgba(15, 23, 42, 0.35);
+  --shadow-xl: 0 30px 70px -40px rgba(15, 23, 42, 0.45);
 }
 
 .theme-light body {
-  background: radial-gradient(circle at 20% 20%, rgba(14, 165, 233, 0.08), transparent 32%),
-    radial-gradient(circle at 80% 0%, rgba(20, 184, 166, 0.08), transparent 32%),
-    linear-gradient(145deg, #eef2f7 0%, #f8fafc 45%, #ffffff 100%);
+  background: linear-gradient(150deg, #f5f7fb 0%, #ffffff 50%, #eef2f7 100%);
   background-attachment: fixed;
   color: var(--foreground);
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border shadow-lg backdrop-blur-sm transition-all duration-300;
-    background: rgba(255, 255, 255, 0.03);
+    @apply rounded-xl border shadow-md transition-all duration-200;
+    background: rgba(255, 255, 255, 0.02);
     border-color: rgba(255, 255, 255, 0.08);
     box-shadow: var(--shadow-md);
   }
@@ -82,17 +78,7 @@
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-200;
-    box-shadow: var(--shadow-sm);
-  }
-
-  .btn:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
-  }
-
-  .btn:active {
-    transform: translateY(0);
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-all duration-150;
     box-shadow: var(--shadow-sm);
   }
 
@@ -261,15 +247,7 @@
 
 /* Smooth hover effects */
 button, a, input, select, textarea {
-  @apply transition-all duration-200;
-}
-
-button:hover, a:hover {
-  @apply scale-[1.02];
-}
-
-button:active, a:active {
-  @apply scale-[0.98];
+  @apply transition-colors duration-150;
 }
 
 /* Animations for scraping progress popup */
