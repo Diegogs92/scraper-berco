@@ -173,6 +173,14 @@ export default function ComparisonModal({ products, onClose }: Props) {
                               {item.descuento}
                             </span>
                           )}
+                          {item.financiacion && (
+                            <>
+                              {item.descuento && <span className="text-white/30">•</span>}
+                              <span className="text-xs text-blue-400 font-medium">
+                                {item.financiacion}
+                              </span>
+                            </>
+                          )}
                           <span className="text-xs text-white/40">
                             {new Date(item.fechaScraping).toLocaleDateString('es-AR', {
                               day: '2-digit',

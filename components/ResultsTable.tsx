@@ -179,6 +179,7 @@ export default function ResultsTable({ onRefresh }: Props) {
               <th className="px-5 py-4">Producto</th>
               <th className="px-5 py-4">Precio</th>
               <th className="px-5 py-4">Descuento</th>
+              <th className="px-5 py-4">Financiación</th>
               <th className="px-5 py-4">Proveedor</th>
               <th className="px-5 py-4">Categoría</th>
               <th className="px-5 py-4">Estado</th>
@@ -188,14 +189,14 @@ export default function ResultsTable({ onRefresh }: Props) {
           <tbody>
             {loading && results.length === 0 ? (
               <tr>
-                <td className="px-4 py-12 text-center text-white/60" colSpan={8}>
+                <td className="px-4 py-12 text-center text-white/60" colSpan={9}>
                   <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
                   Cargando resultados...
                 </td>
               </tr>
             ) : results.length === 0 ? (
               <tr>
-                <td className="px-4 py-0" colSpan={8}>
+                <td className="px-4 py-0" colSpan={9}>
                   <EmptyState
                     icon={hasActiveFilters ? Search : FileText}
                     title={hasActiveFilters ? 'No se encontraron resultados' : 'No hay resultados aún'}
@@ -253,6 +254,13 @@ export default function ResultsTable({ onRefresh }: Props) {
                     <td className="px-5 py-4">
                       {r.descuento ? (
                         <span className="text-[#1EA896] font-semibold">{r.descuento}</span>
+                      ) : (
+                        <span className="text-white/30">-</span>
+                      )}
+                    </td>
+                    <td className="px-5 py-4">
+                      {r.financiacion ? (
+                        <span className="text-blue-400 font-medium text-xs">{r.financiacion}</span>
                       ) : (
                         <span className="text-white/30">-</span>
                       )}

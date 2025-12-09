@@ -170,6 +170,61 @@ function extractDiscount(
   return '';
 }
 
+function extractFinancing($: cheerio.CheerioAPI, proveedor: string): string {
+  // Patrones comunes de financiación
+  const patterns = [
+    /(\d{1,2})\s*cuotas?\s*sin\s*inter[eé]s/i,
+    /(\d{1,2})\s*x\s*\$[\d,.]+\s*sin\s*inter[eé]s/i,
+    /(\d{1,2})\s*cuotas?\s*de\s*\$[\d,.]+/i,
+    /hasta\s*(\d{1,2})\s*cuotas/i,
+    /(\d{1,2})\s*cuotas/i,
+  ];
+
+  // Selectores para buscar información de financiación
+  const selectors = [
+    '.installments',
+    '.financing',
+    '.payment-info',
+    '.cuotas',
+    '[data-installments]',
+    '.js-installments',
+    '.product-installments',
+    '.vtex-product-price-1-x-installments',
+    '.price-installments',
+  ];
+
+  // Buscar en selectores específicos
+  for (const selector of selectors) {
+    const text = cleanText($(selector).first().text());
+    for (const pattern of patterns) {
+      const match = text.match(pattern);
+      if (match) {
+        // Limpiar y formatear el texto
+        const cuotas = match[1];
+        if (text.toLowerCase().includes('sin inter')) {
+          return `${cuotas} cuotas sin interés`;
+        }
+        return `Hasta ${cuotas} cuotas`;
+      }
+    }
+  }
+
+  // Buscar en texto general de la página (más agresivo)
+  const bodyText = cleanText($('.product-info, .product-details, .product-price-container').text());
+  for (const pattern of patterns) {
+    const match = bodyText.match(pattern);
+    if (match) {
+      const cuotas = match[1];
+      if (bodyText.toLowerCase().includes('sin inter')) {
+        return `${cuotas} cuotas sin interés`;
+      }
+      return `Hasta ${cuotas} cuotas`;
+    }
+  }
+
+  return '';
+}
+
 export async function scrapeUrl(url: string, proveedor?: string): Promise<ScrapeResult> {
   const detectedProvider = proveedor || detectProveedor(url);
   console.log(`[SCRAPER] Scraping URL: ${url} | Provider: ${detectedProvider}`);
@@ -210,6 +265,7 @@ export async function scrapeUrl(url: string, proveedor?: string): Promise<Scrape
     const categoria =
       cleanText(jsonLd?.category) || cleanText(jsonLd?.breadcrumbs) || extractBreadcrumbs($);
     const descuento = extractDiscount($, detectedProvider, price, listPrice);
+    const financiacion = extractFinancing($, detectedProvider);
 
     console.log(`[SCRAPER] Extracted data:`, {
       provider: detectedProvider,
@@ -217,6 +273,7 @@ export async function scrapeUrl(url: string, proveedor?: string): Promise<Scrape
       price: price ?? 'N/A',
       listPrice: listPrice ?? 'N/A',
       discount: descuento || 'N/A',
+      financing: financiacion || 'N/A',
       category: categoria || 'N/A',
     });
 
@@ -225,6 +282,7 @@ export async function scrapeUrl(url: string, proveedor?: string): Promise<Scrape
       nombre: name || 'Producto sin nombre',
       precio: price ?? 0,
       descuento,
+      financiacion,
       categoria,
       proveedor: detectedProvider,
       status: 'success',

@@ -20,6 +20,7 @@ export interface ScrapeResult {
   cambioPrecio?: number;
   cambioPorcentaje?: number;
   descuento?: string;
+  financiacion?: string;
   categoria?: string;
   proveedor: string;
   status: ScrapeStatus;
