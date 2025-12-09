@@ -100,7 +100,7 @@ export default function Navbar({ activeSection, onSectionChange }: Props) {
                   }}
                   className={`w-full flex items-center gap-3 px-5 py-3.5 rounded-xl font-semibold transition-all duration-300 ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#1EA896] to-[#FF715B] text-white shadow-lg shadow-[#1EA896]/25'
+                      ? 'bg-[#1EA896] text-white shadow-lg shadow-[#1EA896]/25'
                       : 'text-white/60 hover:text-white hover:bg-white/5'
                   }`}
                 >

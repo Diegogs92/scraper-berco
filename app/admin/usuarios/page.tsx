@@ -234,7 +234,7 @@ function AdminUsuariosContent() {
           {currentUser?.rol !== 'consultante' && (
             <button
               onClick={() => setShowRegisterModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-[#1EA896] hover:bg-[#1EA896] text-white rounded-lg transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-[#1EA896] hover:bg-[#147a6a] text-white rounded-lg transition-colors"
             >
               <UserPlus className="h-5 w-5" />
               Registrar Usuario
@@ -388,7 +388,7 @@ function AdminUsuariosContent() {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-[#1EA896] hover:bg-[#1EA896] text-white rounded-lg transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-2 bg-[#1EA896] hover:bg-[#147a6a] text-white rounded-lg transition-colors flex items-center justify-center gap-2"
                   disabled={actionLoading}
                 >
                   {actionLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Registrar'}

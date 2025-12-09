@@ -106,7 +106,7 @@ export default function ScraperControls({ onRefresh, totals }: Props) {
           className={`btn ${
             config.scrapingActivo
               ? 'bg-[#DB2B39]/80 text-white hover:bg-[#DB2B39]'
-              : 'bg-[#1EA896] text-white hover:bg-[#1EA896]'
+              : 'bg-[#1EA896] text-white hover:bg-[#147a6a]'
           }`}
           disabled={loading}
         >

@@ -66,7 +66,7 @@ export default function OnboardingGuide({ forceShow, onClose }: Props = {}) {
         </button>
 
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-[#1EA896] to-[#FF715B] mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-[#1EA896] to-[#370031] mb-4">
             <CheckCircle className="h-8 w-8 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">¡Bienvenido a Total Scrap!</h2>
@@ -102,7 +102,7 @@ export default function OnboardingGuide({ forceShow, onClose }: Props = {}) {
         <div className="flex gap-3">
           <button
             onClick={handleClose}
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-[#1EA896] to-[#FF715B] text-white font-semibold rounded-xl hover:from-[#1EA896] hover:to-sky-700 transition-all duration-200 shadow-lg shadow-[#1EA896]/20"
+            className="flex-1 px-6 py-3 bg-[#1EA896] text-white font-semibold rounded-xl hover:bg-[#147a6a] transition-all duration-200 shadow-lg shadow-[#1EA896]/25"
           >
             ¡Entendido, empecemos!
           </button>

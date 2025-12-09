@@ -9,7 +9,7 @@ export default function Logo({ className = "h-8 w-8" }: { className?: string }) 
       <defs>
         <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
           <stop offset="0%" stopColor="#1EA896" />
-          <stop offset="100%" stopColor="#FF715B" />
+          <stop offset="100%" stopColor="#370031" />
         </linearGradient>
       </defs>
 
@@ -35,7 +35,7 @@ export default function Logo({ className = "h-8 w-8" }: { className?: string }) 
       <g transform="translate(40, 38)">
         <path
           d="M0 0 L6 0 L9 3 L6 6 L0 6 Z"
-          fill="#DB2B39"
+          fill="#FF715B"
           opacity="0.95"
         />
         <circle cx="3" cy="3" r="1" fill="white" />

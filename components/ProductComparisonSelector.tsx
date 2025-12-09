@@ -126,7 +126,7 @@ export default function ProductComparisonSelector() {
           <button
             onClick={loadProducts}
             disabled={loading}
-            className="btn bg-[#1EA896] hover:bg-[#1EA896] text-white flex items-center gap-2"
+            className="btn bg-[#1EA896] hover:bg-[#147a6a] text-white flex items-center gap-2"
           >
             {loading ? (
               <>

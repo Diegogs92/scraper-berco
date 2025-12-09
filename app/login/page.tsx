@@ -55,12 +55,10 @@ export default function LoginPage() {
       <div className="card w-full max-w-md p-8">
         <div className="flex flex-col items-center mb-8">
           <div className="relative mb-6">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#1EA896] to-[#FF715B] blur-2xl opacity-20 animate-pulse"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#1EA896] to-[#370031] blur-2xl opacity-25 animate-pulse"></div>
             <Logo className="h-20 w-20 relative" />
           </div>
-          <h1 className="text-3xl font-bold text-white bg-gradient-to-r from-[#1EA896] to-[#FF715B] bg-clip-text text-transparent">
-            Total Scrap
-          </h1>
+          <h1 className="text-3xl font-bold text-white">Total Scrap</h1>
           <p className="text-white/60 text-sm mt-2">Inicia sesión para continuar</p>
         </div>
 
@@ -115,7 +113,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-[#1EA896] to-[#FF715B] text-white font-semibold py-3 px-4 rounded-xl hover:from-[#1EA896] hover:to-[#370031] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#1EA896]/20 hover:shadow-xl hover:shadow-[#1EA896]/30 transform hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full bg-[#1EA896] text-white font-semibold py-3 px-4 rounded-xl hover:bg-[#147a6a] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#1EA896]/25 hover:shadow-xl hover:shadow-[#147a6a]/35 transform hover:scale-[1.01] active:scale-[0.98]"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">

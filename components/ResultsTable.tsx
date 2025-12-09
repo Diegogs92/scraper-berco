@@ -157,7 +157,7 @@ export default function ResultsTable({ onRefresh }: Props) {
       {selectedIds.size > 0 && (
         <button
           onClick={() => setShowComparison(true)}
-          className="btn bg-gradient-to-r from-[#1EA896] to-teal-500 text-white hover:from-[#1EA896] hover:to-teal-600 flex items-center gap-2"
+          className="btn bg-[#1EA896] hover:bg-[#147a6a] text-white flex items-center gap-2 shadow-md shadow-[#1EA896]/20"
         >
           <BarChart3 className="h-4 w-4" />
           Comparar {selectedIds.size} {selectedIds.size === 1 ? 'Producto' : 'Productos'}
@@ -208,7 +208,7 @@ export default function ResultsTable({ onRefresh }: Props) {
                       !hasActiveFilters ? (
                         <button
                           onClick={() => {/* Navigate to URLs section */}}
-                          className="btn bg-[#1EA896] text-white hover:bg-[#1EA896] flex items-center gap-2"
+                          className="btn bg-[#1EA896] text-white hover:bg-[#147a6a] flex items-center gap-2"
                         >
                           <Play className="h-4 w-4" />
                           Ir a agregar URLs

@@ -22,7 +22,7 @@ export default function Footer() {
               window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             }
           }}
-          className="btn bg-gradient-to-r from-[#FF715B] to-[#1EA896] text-white shadow-md shadow-[#FF715B]/20 hover:shadow-lg hover:shadow-[#1EA896]/25 rounded-full px-5 py-2 text-sm font-semibold"
+          className="btn bg-[#FF715B] hover:bg-[#d65d4b] text-white shadow-md shadow-[#FF715B]/30 hover:shadow-lg rounded-full px-5 py-2 text-sm font-semibold"
         >
           Dejá tu comentario
         </button>

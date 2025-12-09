@@ -335,7 +335,7 @@ export default function URLManager({ onChange }: Props) {
           />
           <button
             type="submit"
-            className="btn bg-gradient-to-r from-[#1EA896] to-[#FF715B] text-white shadow-lg shadow-[#1EA896]/25 px-6 flex items-center gap-2 font-semibold"
+            className="btn bg-[#1EA896] hover:bg-[#147a6a] text-white shadow-lg shadow-[#1EA896]/25 px-6 flex items-center gap-2 font-semibold"
             disabled={loading}
             title="Agregar URL"
           >
@@ -378,7 +378,7 @@ export default function URLManager({ onChange }: Props) {
                       !searchTerm && !statusFilter ? (
                         <button
                           onClick={() => document.querySelector<HTMLInputElement>('input[placeholder*="Agregar"]')?.focus()}
-                          className="btn bg-[#1EA896] text-white hover:bg-[#1EA896] flex items-center gap-2"
+                          className="btn bg-[#1EA896] text-white hover:bg-[#147a6a] flex items-center gap-2"
                         >
                           <Plus className="h-4 w-4" />
                           Agregar primera URL
@@ -525,7 +525,7 @@ export default function URLManager({ onChange }: Props) {
                 </button>
                 <button
                   onClick={saveEditUrl}
-                  className="btn bg-[#1EA896] text-white hover:bg-[#1EA896]"
+                  className="btn bg-[#1EA896] text-white hover:bg-[#147a6a]"
                   disabled={loading || !editUrlValue.trim()}
                 >
                   {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Guardar'}
